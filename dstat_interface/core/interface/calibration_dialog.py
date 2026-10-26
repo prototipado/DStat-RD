@@ -36,10 +36,25 @@ class CalibrationDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Calibration / Device Settings")
-        self.resize(420, 560)
+        self.resize(460, 620)
         self.setModal(True)
 
         self._fields: dict[str, object] = {}
+
+        # Brief procedure hint at the top.
+        hint = QLabel(
+            "Procedimiento breve:\n"
+            "1. Conectá el DStat y pulsá «Read from device».\n"
+            "2. DAC offset: medí el pin DAC_OUT con multímetro; ajustá hasta que "
+            "0 mV → 1.500 V.\n"
+            "3. Gain trims: con electrodos al aire (Ropen) o resistor conocido, "
+            "ajustá cada trim hasta que la corriente coincida con la Ley de Ohm.\n"
+            "4. Pulsá «Write to device» para guardar en EEPROM.\n"
+            "5. Verificá con tools/analyze_signals.py."
+        )
+        hint.setWordWrap(True)
+        hint.setStyleSheet("background:#f0fdfa; border:1px solid #0d9488; "
+                           "border-radius:6px; padding:8px; font-size:9pt;")
 
         scroll = QScrollArea(self)
         scroll.setWidgetResizable(True)
@@ -56,6 +71,12 @@ class CalibrationDialog(QDialog):
             "voltage baseline."
         )
         dac_form.addRow("DAC offset:", self._fields["max5443_offset"])
+
+        dac_hint = QLabel("Unidades DAC (±32767). 0 = sin corrección. Corrige el "
+                          "offset de tensión del DAC MAX5443.")
+        dac_hint.setWordWrap(True)
+        dac_hint.setStyleSheet("color:#6b7280; font-size:8pt;")
+        dac_form.addRow("", dac_hint)
 
         self._fields["dac_units_true"] = QCheckBox("Firmware expects DAC units (not mV)")
         self._fields["dac_units_true"].setToolTip(
@@ -76,6 +97,12 @@ class CalibrationDialog(QDialog):
             )
             self._fields[key] = sb
             trim_form.addRow(label + ":", sb)
+        trim_hint = QLabel("Unidades ADC (±32767). 0 = sin corrección. Ajustar con "
+                           "resistor conocido o Ropen hasta que la corriente "
+                           "coincida con la Ley de Ohm.")
+        trim_hint.setWordWrap(True)
+        trim_hint.setStyleSheet("color:#6b7280; font-size:8pt;")
+        trim_form.addRow("", trim_hint)
         layout.addWidget(trim_grp)
 
         # --- EIS ---
@@ -88,6 +115,10 @@ class CalibrationDialog(QDialog):
         self._fields["eis_cal2"] = QSpinBox()
         self._fields["eis_cal2"].setRange(0, 2_000_000_000)
         eis_form.addRow("EIS cal 2:", self._fields["eis_cal2"])
+        eis_hint = QLabel("Constantes de calibración para EIS. Default: 3000 y 3000000.")
+        eis_hint.setWordWrap(True)
+        eis_hint.setStyleSheet("color:#6b7280; font-size:8pt;")
+        eis_form.addRow("", eis_hint)
         layout.addWidget(eis_grp)
 
         # --- Light sensor ---
@@ -105,6 +136,7 @@ class CalibrationDialog(QDialog):
         scroll.setWidget(container)
 
         outer = QVBoxLayout(self)
+        outer.addWidget(hint)
         outer.addWidget(scroll)
 
         # --- Buttons ---
