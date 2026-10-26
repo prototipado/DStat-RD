@@ -28,7 +28,8 @@ Ejemplo: `chrono_100mV_3Mohm_R1M_50Hz_no_shield_0000.txt`
 
 - `100mV` — potencial aplicado (mV)
 - `3Mohm` — resistor de ganancia del TIA (3 MΩ)
-- `R1M` — resistor de prueba (1 MΩ)
+- `R1M` — resistor de prueba (1 MΩ). Usar `Ropen` cuando los electrodos
+  están al aire (sin resistor), para evaluar corrientes de fuga de la PCB.
 - `50Hz` — frecuencia de muestreo del ADC
 - `no_shield` — condición de blindaje
 - `0000` — índice de captura

@@ -36,7 +36,7 @@ import matplotlib.pyplot as plt
 # ---------------------------------------------------------------------------
 FILENAME_RE = re.compile(
     r"chrono_(?P<pot>[\d.]+)mV_(?P<gain>[\d.]+)(?P<gain_unit>[kM]?)ohm"
-    r"_R(?P<r>[\d.]+)(?P<r_unit>[kM]?)_(?P<freq>[\d.]+)Hz_"
+    r"_R(?P<r>open|[\d.]+)(?P<r_unit>[kM]?)_(?P<freq>[\d.]+)Hz_"
     r"(?P<shield>[A-Za-z_]+)_(?P<idx>\d+)\.txt$",
     re.IGNORECASE,
 )
@@ -59,15 +59,22 @@ def parse_filename(name: str) -> dict | None:
     d = m.groupdict()
     pot_mv = float(d["pot"])
     gain_ohm = _unit_to_ohms(d["gain"], d["gain_unit"])
-    r_ohm = _unit_to_ohms(d["r"], d["r_unit"])
+    r_raw = d["r"].lower()
+    if r_raw == "open":
+        r_ohm = None
+        expected = None
+    else:
+        r_ohm = _unit_to_ohms(d["r"], d["r_unit"])
+        expected = (pot_mv / 1000.0) / r_ohm
     return {
         "potential_mV": pot_mv,
         "gain_ohm": gain_ohm,
         "r_test_ohm": r_ohm,
+        "r_test_label": "open (no resistor)" if r_ohm is None else "%g ohm" % r_ohm,
         "sample_rate_hz": float(d["freq"]),
         "shield": d["shield"],
         "index": d["idx"],
-        "expected_current_A": (pot_mv / 1000.0) / r_ohm,
+        "expected_current_A": expected,
     }
 
 
@@ -109,7 +116,10 @@ def analyze(times: np.ndarray, currents: np.ndarray, meta: dict) -> dict:
     cv_pct = (std / mean * 100.0) if mean != 0 else float("nan")
 
     expected = meta["expected_current_A"]
-    err_pct = ((mean - expected) / expected * 100.0) if expected != 0 else float("nan")
+    if expected is None:
+        err_pct = float("nan")
+    else:
+        err_pct = ((mean - expected) / expected * 100.0) if expected != 0 else float("nan")
 
     # FFT (one-sided magnitude, excluding DC bin)
     if n > 4 and fs > 0:
@@ -207,8 +217,16 @@ def print_table(rows: list[dict]):
         for _, key, w in cols:
             if key == "file":
                 vals.append(str(r["file"])[:w].ljust(w))
+            elif key == "r_test_ohm":
+                v = r.get("r_test_ohm")
+                if v is None and "meta" in r:
+                    v = r["meta"].get("r_test_ohm")
+                vals.append(("open" if v is None else fmt(v, ".3g")).ljust(w))
             else:
                 v = r["stats"][key] if key in r["stats"] else r.get(key)
+                # pull from meta if not in stats
+                if v is None and key in r.get("meta", {}):
+                    v = r["meta"][key]
                 vals.append(fmt(v).ljust(w))
         print("  ".join(vals))
 
@@ -243,7 +261,11 @@ def make_plots(rows: list[dict], out_dir: Path):
     expecteds = [r["stats"]["expected_A"] for r in rows]
     x = np.arange(len(rows))
     ax.bar(x, means, yerr=stds, capsize=4, color="#0d9488", alpha=0.75, label="measured mean ± std")
-    ax.plot(x, expecteds, "rx", markersize=10, label="Ohm expectation")
+    # Only plot Ohm expectation where a test resistor exists
+    ex_x = [i for i, e in enumerate(expecteds) if e is not None]
+    ex_y = [e for e in expecteds if e is not None]
+    if ex_x:
+        ax.plot(ex_x, ex_y, "rx", markersize=10, label="Ohm expectation")
     ax.set_xticks(x)
     ax.set_xticklabels(labels, rotation=45, ha="right", fontsize=8)
     ax.set_ylabel("Current (A)")
@@ -339,8 +361,8 @@ def main():
                 "p2p_A": s["p2p_A"],
                 "rms_noise_A": s["rms_noise_A"],
                 "cv_pct": s["cv_pct"],
-                "expected_A": s["expected_A"],
-                "error_pct": s["error_pct"],
+                "expected_A": ("" if s["expected_A"] is None else s["expected_A"]),
+                "error_pct": ("" if s["error_pct"] is None or (isinstance(s["error_pct"], float) and np.isnan(s["error_pct"])) else s["error_pct"]),
                 "peak_freq_hz": s["peak_freq_hz"],
                 "peak_mag": s["peak_mag"],
                 "noise_floor": s["noise_floor"],
