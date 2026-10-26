@@ -1,13 +1,32 @@
-# DStat GUI dev 2.0
+# DStat GUI v2.1
 
-Python 3 / Qt6 desktop edition of the DStat interface. It reuses the newer
-serial protocol and experiment code while restoring the original window
-organization: instrument settings and experiment controls at left, autosave
-and data notebook at right, and serial connection controls along the bottom.
+Edición de escritorio Python 3 / Qt6 de la interfaz del DStat. Reutiliza el
+protocolo serie y el código de experimentos más recientes, restaurando la
+organización original de la ventana: ajustes del instrumento y controles de
+experimento a la izquierda, autosave y cuaderno de datos a la derecha, y
+controles de comunicación serial a lo largo de la parte inferior.
 
-## Run from source
+## Novedades de v2.1
 
-Requires Windows and Python 3.10 or newer.
+- **Tema claro y oscuro** con selector en **View → Theme** (System / Light /
+  Dark), persistente entre sesiones (QSettings).
+- **Paleta consistente** con un único color de acento teal `#0d9488`, definida
+  en `dstat_interface/core/interface/theme.py` y `styles.qss`.
+- **Paneles tipo "card"** con bordes redondeados, espaciado y márgenes parejos.
+- Botón **Execute** destacado en color de acento, **Stop** en rojo,
+  **Connect/Disconnect** con estado visual claro.
+- **Gráfico de matplotlib estilizado** según el tema (fondo, grilla sutil,
+  línea más gruesa con acento), con iconos modernos en la barra de
+  herramientas.
+- **Panel Protocol** con fuente monoespaciada, colores por dirección y
+  posibilidad de colapsarlo.
+- Controles de entrada con estados hover/focus/disabled visibles.
+- Barra de estado inferior con información útil.
+- Mejor soporte de DPI alto y redimensionado de ventana.
+
+## Ejecutar desde código fuente
+
+Requiere Windows y Python 3.10 o superior.
 
 ```powershell
 python -m venv .venv
@@ -16,70 +35,93 @@ python -m pip install -r requirements.txt
 python -m dstat_interface.main
 ```
 
-## Build the Windows executable
+## Compilar el ejecutable de Windows
 
-From a Windows Command Prompt, run:
+Desde un símbolo del sistema de Windows, ejecutá:
 
 ```bat
 build_exe.bat
 ```
 
-The script automatically prefers the workspace virtual environment at
-`..\.venv\Scripts\python.exe`, then a local `.venv`, and finally `python` on
-`PATH`. To select another interpreter, set `PYTHON_EXE` before running the
-script, for example:
+El script prefiere automáticamente el entorno virtual del workspace en
+`..\.venv\Scripts\python.exe`, luego un `.venv` local y, por último, `python`
+en el `PATH`. Para seleccionar otro intérprete, definí `PYTHON_EXE` antes de
+ejecutar el script, por ejemplo:
 
 ```bat
 set PYTHON_EXE=C:\path\to\python.exe
 build_exe.bat
 ```
 
-The script installs the Python dependencies and PyInstaller, then creates an
-onedir application at `dist\DStat-GUI-dev2\`. Run
-`DStat-GUI-dev2.exe` from that folder; keep its `_internal` directory beside
-the executable. The executable does not require Python to be installed on the
-target computer.
+El script instala las dependencias de Python y PyInstaller, y crea una
+aplicación onedir en `dist\DStat-GUI-dev2\`. Ejecutá
+`DStat-GUI-dev2.exe` desde esa carpeta; mantené su directorio `_internal`
+junto al ejecutable. El ejecutable no requiere que Python esté instalado en
+la computadora de destino.
 
-Runtime logs and native crash traces are written to
-`%LOCALAPPDATA%\DStat GUI 2.0\logs\` (`dstat-gui.log` and `crash.log`).
+Los logs de ejecución y las trazas de fallos nativos se escriben en
+`%LOCALAPPDATA%\DStat GUI 2.0\logs\` (`dstat-gui.log` y `crash.log`).
 
-## Protocol terminal
+## Terminal de protocolo
 
-The right-hand pane shows the serial conversation with the DStat while it
-happens, which is useful for reviewing the command protocol:
+El panel derecho muestra la conversación serial con el DStat mientras ocurre,
+útil para revisar el protocolo de comandos:
 
-| Colour | Symbol | Meaning |
+| Color | Símbolo | Significado |
 | --- | --- | --- |
-| blue | `→` | line sent by the GUI (`!n`, the command itself, parameters, `a` to stop) |
-| green | `←` | line received from the DStat (`@ACK`, `@RCV`, `@DONE`, results) |
-| grey | `·` | firmware comments (`#...` lines) and progress notes |
-| amber | `!` | unexpected reply; the command was retried |
-| red | `×` | command that could not be delivered |
+| azul | `→` | línea enviada por la GUI (`!n`, el comando, parámetros, `a` para detener) |
+| verde | `←` | línea recibida del DStat (`@ACK`, `@RCV`, `@DONE`, resultados) |
+| gris | `·` | comentarios del firmware (`#...`) y notas de progreso |
+| ámbar | `!` | respuesta inesperada; el comando se reintentó |
+| rojo | `×` | comando que no pudo entregarse |
 
-Trailing spaces are rendered as `·` because the firmware counts them with
-`strlen()` and they are part of the length prefix. Binary sample frames are
-not logged (they would flood the pane); every 200 frames a summary note is
-added instead. The pane can be hidden or restored with **View → Protocol
-Terminal** (`Ctrl+P`), and its contents can be saved to a text file with
-**Save…**.
+Los espacios finales se renderizan como `·` porque el firmware los cuenta con
+`strlen()` y forman parte del prefijo de longitud. Las tramas binarias de
+muestras no se registran (inundarían el panel); en su lugar se añade una
+nota resumen cada 200 tramas. El panel se puede ocultar o restaurar con
+**View → Protocol Terminal** (`Ctrl+P`), y su contenido se puede guardar en un
+archivo de texto con **Save…**.
 
-## Using the instrument
+## Uso del instrumento
 
-Connect the DStat, click **Refresh**, select its COM port, and click
-**Connect**. The port selection is shown in the full-width communication bar
-at the bottom of the window. Confirm the detected firmware/board in the status
-bar before running an experiment.
+Conectá el DStat, hacé clic en **Refresh**, seleccioná su puerto COM y hacé
+clic en **Connect**. La selección del puerto se muestra en la barra de
+comunicación de ancho completo en la parte inferior de la ventana. Confirmá
+el firmware/placa detectados en la barra de estado antes de ejecutar un
+experimento.
 
-## Included techniques
+## Técnicas incluidas
 
-The Python 3 engine currently provides cyclic voltammetry, linear sweep
-voltammetry, square-wave voltammetry, differential pulse voltammetry,
-chronoamperometry, and potentiometry. The original Python 2/GTK application
-also listed AC voltammetry, photodiode, and offset calibration; those modes
-are not implemented in the reused Python 3 engine and are not exposed here.
+El motor Python 3 actual provee voltametría cíclica, voltametría de barrido
+lineal, voltametría de onda cuadrada, voltametría de pulso diferencial,
+cronoamperometría y potenciometría. La aplicación original Python 2/GTK
+también listaba voltametría de CA, fotodiodo y calibración de offset; esos
+modos no están implementados en el motor Python 3 reutilizado y no se
+exponen aquí.
 
 ## Tests
 
 ```powershell
 python -m unittest discover -s tests -v
 ```
+
+## Estructura del proyecto
+
+```
+dstat_interface/
+  main.py                      # punto de entrada
+  core/
+    dstat/                     # comunicación serial, placas, estado
+    experiments/               # CV, LSV, SWV, DPV, CA, potenciometría
+    interface/
+      main_window.py           # ventana principal
+      plot_widget.py           # gráfico matplotlib embebido
+      protocol_view.py         # terminal de protocolo
+      theme.py / theme_manager.py / styles.qss   # sistema de temas
+      icons/                   # iconos SVG modernos
+tests/                         # pruebas unitarias
+```
+
+## Licencia
+
+GPL-3.0 (ver `LICENSE`).
