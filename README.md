@@ -99,6 +99,22 @@ también listaba voltametría de CA, fotodiodo y calibración de offset; esos
 modos no están implementados en el motor Python 3 reutilizado y no se
 exponen aquí.
 
+## Calibración
+
+La GUI incluye un diálogo de calibración en **View → Calibration / Device
+Settings…** que permite leer, editar y escribir los parámetros de la EEPROM
+del DStat:
+
+- Offset del DAC (`max5443_offset`).
+- Trims de corriente por ganancia (`r100_trim` … `r100M_trim`).
+- Constantes de calibración EIS (`eis_cal1`, `eis_cal2`).
+- Sensor de luz (`tcs_enabled`, `tcs_clear_threshold`).
+- Modo de unidades del DAC (`dac_units_true`).
+
+Los valores se guardan en la EEPROM del DStat al pulsar **Write to device** y
+persisten entre ciclos de encendido. **Restore defaults** restablece los
+valores de fábrica del firmware.
+
 ## Tests
 
 ```powershell
