@@ -328,6 +328,37 @@ QFrame[frameShape="4"] {{
     color: {border};
 }}
 
+/* ---- Tables ---- */
+QTableWidget, QTableView {{
+    background-color: {card};
+    color: {fg};
+    border: 1px solid {border};
+    border-radius: {radius_small}px;
+    gridline-color: {border};
+    selection-background-color: {selected};
+    selection-color: {fg};
+}}
+QTableWidget::item {{
+    padding: 4px 6px;
+    color: {fg};
+}}
+QTableWidget::item:selected {{
+    background-color: {selected};
+    color: {fg};
+}}
+QHeaderView::section {{
+    background-color: {bg_alt};
+    color: {fg};
+    border: none;
+    border-bottom: 1px solid {border};
+    border-right: 1px solid {border};
+    padding: 4px 6px;
+    font-weight: 600;
+}}
+QHeaderView::section:hover {{
+    background-color: {hover};
+}}
+
 /* ---- Protocol terminal text ---- */
 QPlainTextEdit {{
     background-color: {bg_alt};
