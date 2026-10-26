@@ -14,10 +14,12 @@ from PyQt6.QtWidgets import (
     QSpinBox, QCheckBox, QPushButton, QMessageBox,
     QScrollArea, QWidget,
 )
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QEventLoop
 from collections import OrderedDict
 
 from ..dstat import state, comm
+from ..experiments.experiment_loops import BaseLoop
+from ..experiments.calib import CalibExp
 from .theme_manager import resolved_palette
 
 logger = logging.getLogger(__name__)
@@ -96,6 +98,15 @@ class CalibrationDialog(QDialog):
         # --- Current trims ---
         trim_grp = QGroupBox("Current gain trims (ADC counts)")
         trim_form = QFormLayout(trim_grp)
+
+        self._calib_time = QSpinBox()
+        self._calib_time.setRange(1, 65535)
+        self._calib_time.setValue(10)
+        self._calib_time.setToolTip(
+            "Duration (s) of the 0 mV calibration step per gain."
+        )
+        trim_form.addRow("Calibration time (s):", self._calib_time)
+
         for key, label in GAIN_TRIMS:
             sb = QSpinBox()
             sb.setRange(-32767, 32767)
@@ -156,6 +167,10 @@ class CalibrationDialog(QDialog):
         self.btn_defaults = QPushButton("Restore defaults")
         self.btn_defaults.clicked.connect(self._restore_defaults)
         btns.addWidget(self.btn_defaults)
+
+        self.btn_measure = QPushButton("Measure (auto-calibrate)")
+        self.btn_measure.clicked.connect(self._measure)
+        btns.addWidget(self.btn_measure)
 
         self.btn_write = QPushButton("Write to device")
         self.btn_write.setObjectName("btn_execute")
@@ -270,3 +285,81 @@ class CalibrationDialog(QDialog):
                 else:
                     w.setValue(int(v))
         self._write()
+
+    def _measure(self):
+        if state.ser is None or not getattr(state.ser, "is_connected", False):
+            QMessageBox.warning(self, "Not connected", "Connect to the DStat first.")
+            return
+        reply = QMessageBox.question(
+            self, "Auto-calibrate",
+            "Run calibration for all 7 gains? This takes about "
+            "%d seconds per gain." % self._calib_time.value(),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+        )
+        if reply != QMessageBox.StandardButton.Yes:
+            return
+
+        time_val = int(self._calib_time.value())
+        gain_trim_table = [None, "r100_trim", "r3k_trim", "r30k_trim",
+                           "r300k_trim", "r3M_trim", "r30M_trim", "r100M_trim"]
+
+        # Stop OCP if running (best effort)
+        try:
+            if hasattr(self.parent(), "_stop_ocp"):
+                self.parent()._stop_ocp()
+        except Exception:
+            pass
+
+        self.btn_measure.setEnabled(False)
+        self.btn_read.setEnabled(False)
+        self.btn_write.setEnabled(False)
+        errors = []
+        for gain_idx in range(1, 8):
+            try:
+                state.ser.flush_data()
+                state.ser.flush_proc()
+                exp = CalibExp({"gain": gain_idx, "time": time_val})
+                state.ser.start_exp(exp)
+
+                loop = BaseLoop(exp, parent=self)
+                ev = QEventLoop()
+                loop.experiment_done.connect(ev.quit)
+                loop.completion_error.connect(ev.quit)
+                loop.run()
+                ev.exec()
+
+                if getattr(loop, "serial_error", False):
+                    errors.append("gain %d: serial error" % gain_idx)
+                    continue
+
+                offset = state.ser.get_data(block=True, timeout=10)
+                if offset is None:
+                    errors.append("gain %d: no data" % gain_idx)
+                    continue
+                trim = -int(offset)
+                trim = max(-32767, min(32767, trim))
+                key = gain_trim_table[gain_idx]
+                if key in self._fields:
+                    self._fields[key].setValue(trim)
+            except Exception as exc:
+                errors.append("gain %d: %s" % (gain_idx, exc))
+                logger.exception("Auto-calibrate gain %d failed", gain_idx)
+
+        self.btn_measure.setEnabled(True)
+        self.btn_read.setEnabled(True)
+        self.btn_write.setEnabled(True)
+
+        # Restart OCP (best effort)
+        try:
+            if hasattr(self.parent(), "_start_ocp"):
+                self.parent()._start_ocp()
+        except Exception:
+            pass
+
+        if errors:
+            QMessageBox.warning(self, "Auto-calibrate",
+                                "Completed with errors:\n" + "\n".join(errors))
+        else:
+            QMessageBox.information(self, "Auto-calibrate",
+                                    "Calibration offsets measured. Review and "
+                                    "click 'Write to device' to save.")
