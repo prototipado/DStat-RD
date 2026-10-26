@@ -109,7 +109,7 @@ class SerialTrace:
             frames = self._data_frames + 1
             object.__setattr__(self, "_data_frames", frames)
             if frames % 200 == 0:
-                self.note(TRACE_INFO, "â€¦ {} data frames received".format(frames))
+                self.note(TRACE_INFO, "Ã¢â‚¬Â¦ {} data frames received".format(frames))
             return
         if kind == TRACE_RX and text.lstrip().startswith("#"):
             kind = TRACE_INFO
@@ -200,6 +200,17 @@ def _serial_process(ser_port, proc_pipe, ctrl_pipe, data_pipe, trace_queue=None)
             raise serial.SerialException(
                 f"No valid startup handshake received from {ser_port}."
             )
+
+        # Let the device settle before accepting further commands.
+        time.sleep(0.5)
+        try:
+            for _ in range(5):
+                n = getattr(ser, "in_waiting", 0)
+                if n:
+                    ser.read(n)
+                time.sleep(0.1)
+        except Exception:
+            pass
 
         trace.note(TRACE_INFO, "handshake complete on {}".format(ser_port))
         proc_pipe.send("READY")
