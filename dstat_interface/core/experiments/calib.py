@@ -121,17 +121,14 @@ class CalibExp(Experiment):
                         except Exception:
                             pass
                         time.sleep(0.8)
-                        # Drain any trailing device->PC bytes (wait for silence).
+                        # Drain trailing device->PC bytes (fixed budget).
                         try:
-                            deadline = time.monotonic() + 1.0
-                            last = time.monotonic()
-                            while time.monotonic() < deadline:
+                            end = time.monotonic() + 2.0
+                            while time.monotonic() < end:
                                 n = getattr(self.serial, "in_waiting", 0)
                                 if n:
                                     self.serial.read(n)
-                                    last = time.monotonic()
-                                    deadline = max(deadline, last + 0.5)
-                                time.sleep(0.05)
+                                time.sleep(0.1)
                         except Exception:
                             pass
                         return True
