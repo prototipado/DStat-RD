@@ -170,6 +170,12 @@ def _serial_process(ser_port, proc_pipe, ctrl_pipe, data_pipe, trace_queue=None)
     for attempt in range(5):
         try:
             ser = serial.Serial(ser_port, timeout=0.5, write_timeout=3)
+            # Avoid an implicit reset of the device on open: deassert DTR/RTS.
+            try:
+                ser.dtr = False
+                ser.rts = False
+            except Exception:
+                pass
             break
         except serial.SerialException as exc:
             last_error = exc
@@ -183,19 +189,40 @@ def _serial_process(ser_port, proc_pipe, ctrl_pipe, data_pipe, trace_queue=None)
                 f"{last_error or 'port is closed'}"
             )
 
+        # Let the device settle after open and clear any stale bytes.
+        time.sleep(0.2)
+        try:
+            ser.reset_input_buffer()
+            ser.reset_output_buffer()
+        except Exception:
+            pass
+
         # Every read/write from this point on is mirrored to the protocol
         # terminal in the GUI.
         trace = SerialTrace(ser, trace_queue)
 
-        trace.write(b'!0 ')
+        # Retry the startup handshake a few times; the device may still be
+        # settling after the port was opened.
+        handshake_ok = False
+        for _attempt in range(3):
+            try:
+                ser.reset_input_buffer()
+            except Exception:
+                pass
+            trace.write(b'!0 ')
+            time.sleep(0.1)
+            for _ in range(12):
+                line = trace.readline().rstrip().decode(errors="replace")
+                if line == "@ACK 0":
+                    reply = trace.readline().rstrip().decode(errors="replace")
+                    if reply == "@RCV 0":
+                        handshake_ok = True
+                        break
+            if handshake_ok:
+                break
+            time.sleep(0.3)
 
-        for _ in range(12):
-            line = trace.readline().rstrip().decode(errors="replace")
-            if line == "@ACK 0":
-                reply = trace.readline().rstrip().decode(errors="replace")
-                if reply == "@RCV 0":
-                    break
-        else:
+        if not handshake_ok:
             raise serial.SerialException(
                 f"No valid startup handshake received from {ser_port}."
             )
@@ -347,7 +374,7 @@ class SerialConnection(QObject):
                 pipe.close()
                 setattr(self, name, None)
 
-        deadline = time.monotonic() + 12
+        deadline = time.monotonic() + 20
         try:
             while time.monotonic() < deadline:
                 if self.proc_pipe_p.poll(0.05):
@@ -818,16 +845,27 @@ class Settings:
         return _write_command(self.ser, cmd)
 
 
-def read_settings():
+def read_settings(retries: int = 2):
     """Populate `state.settings` from the connected DStat."""
-    state.ser.flush_data()
-    state.ser.flush_proc()
-    state.ser.start_exp(Settings(task="r"))
+    last_exc = None
+    for attempt in range(retries + 1):
+        try:
+            state.ser.flush_data()
+            state.ser.flush_proc()
+            state.ser.start_exp(Settings(task="r"))
 
-    state.settings = state.ser.get_data(block=True, timeout=15) or OrderedDict()
-
-    logger.info("Read settings from DStat")
-    logger.debug("read_settings proc: %s", state.ser.get_proc(block=True, timeout=15))
+            data = state.ser.get_data(block=True, timeout=20)
+            state.settings = data or OrderedDict()
+            proc = state.ser.get_proc(block=True, timeout=20)
+            logger.info("Read settings from DStat (attempt %d)", attempt + 1)
+            logger.debug("read_settings proc: %s", proc)
+            return state.settings
+        except Exception as exc:
+            last_exc = exc
+            logger.warning("read_settings attempt %d failed: %s", attempt + 1, exc)
+            time.sleep(0.5)
+    logger.error("read_settings failed after %d attempts: %s", retries + 1, last_exc)
+    state.settings = OrderedDict()
     return state.settings
 
 
