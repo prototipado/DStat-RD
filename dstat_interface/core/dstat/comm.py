@@ -190,7 +190,16 @@ def _serial_process(ser_port, proc_pipe, ctrl_pipe, data_pipe, trace_queue=None)
             )
 
         # Let the device settle after open and clear any stale bytes.
-        time.sleep(0.2)
+        time.sleep(0.5)
+        # Aggressive drain: read everything available, multiple passes.
+        try:
+            for _ in range(10):
+                n = getattr(ser, "in_waiting", 0)
+                if n:
+                    ser.read(n)
+                time.sleep(0.1)
+        except Exception:
+            pass
         try:
             ser.reset_input_buffer()
             ser.reset_output_buffer()
