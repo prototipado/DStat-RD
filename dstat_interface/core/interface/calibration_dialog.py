@@ -218,6 +218,10 @@ class CalibrationDialog(QDialog):
             QMessageBox.warning(self, "Not connected", "Connect to the DStat first.")
             return
         try:
+            state.ser.send_ctrl("a")
+            time.sleep(0.5)
+            state.ser.flush_data()
+            state.ser.flush_proc()
             comm.read_settings()
         except Exception as exc:
             QMessageBox.critical(self, "Read failed", str(exc))
@@ -256,9 +260,11 @@ class CalibrationDialog(QDialog):
             ordered[k][1] = values.get(k, ordered[k][1])
         state.settings = OrderedDict(ordered)
         try:
+            state.ser.send_ctrl("a")
+            time.sleep(1.0)
             state.ser.flush_data()
             state.ser.flush_proc()
-            time.sleep(0.3)
+            time.sleep(0.5)
         except Exception:
             pass
         try:
@@ -398,11 +404,18 @@ class CalibrationDialog(QDialog):
             self.progress_bar.setValue(int((i + 1) / total_gains * 100))
 
         self.progress_bar.setFormat("Done")
+        # Ensure the device is idle and buffers are clear.
+        try:
+            state.ser.send_ctrl("a")
+            time.sleep(1.0)
+        except Exception:
+            pass
         try:
             state.ser.flush_data()
             state.ser.flush_proc()
         except Exception:
             pass
+        time.sleep(0.5)
         self.btn_measure.setEnabled(True)
         self.btn_read.setEnabled(True)
         self.btn_write.setEnabled(True)

@@ -121,11 +121,12 @@ class CalibExp(Experiment):
                         except Exception:
                             pass
                         time.sleep(0.8)
-                        # Drain any trailing device->PC bytes.
+                        # Drain any trailing device->PC bytes (multiple passes).
                         try:
-                            while getattr(self.serial, "in_waiting", 0):
-                                self.serial.read(self.serial.in_waiting)
-                                time.sleep(0.05)
+                            for _ in range(5):
+                                if getattr(self.serial, "in_waiting", 0):
+                                    self.serial.read(self.serial.in_waiting)
+                                time.sleep(0.1)
                         except Exception:
                             pass
                         return True
