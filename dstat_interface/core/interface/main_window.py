@@ -50,7 +50,7 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-VERSION = "2.0.0"
+VERSION = "2.1.0"
 
 # ADC sample rate options: (display label, command value)
 # Values are hexadecimal ADS1255 DRATE codes parsed with %hhx by the firmware.
@@ -305,7 +305,7 @@ la corriente capacitiva.</p>
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle(f"DStat GUI 2.0  v{VERSION}")
+        self.setWindowTitle(f"DStat GUI 2.1  v{VERSION}")
         self.resize(1200, 800)
         self.setMinimumSize(960, 640)
 
@@ -408,6 +408,20 @@ class MainWindow(QMainWindow):
         )
         self._act_protocol.triggered.connect(self._toggle_protocol_panel)
         view_menu.addAction(self._act_protocol)
+
+        view_menu.addSeparator()
+
+        # Theme submenu
+        theme_menu = view_menu.addMenu("Theme")
+        from .theme_manager import load_preference, save_preference, apply_theme
+        self._theme_actions = {}
+        for mode, label in (("system", "System (default)"), ("light", "Light"), ("dark", "Dark")):
+            act = QAction(label, self)
+            act.setCheckable(True)
+            act.setChecked(load_preference() == mode)
+            act.triggered.connect(lambda checked=False, m=mode: self._on_theme_change(m))
+            theme_menu.addAction(act)
+            self._theme_actions[mode] = act
 
         # Help
         help_menu = bar.addMenu("&Help")
@@ -866,6 +880,14 @@ class MainWindow(QMainWindow):
     @pyqtSlot(bool)
     def _toggle_protocol_panel(self, checked: bool):
         self.protocol_view.setVisible(checked)
+
+    def _on_theme_change(self, mode: str):
+        from .theme_manager import save_preference, apply_theme
+        save_preference(mode)
+        app = QApplication.instance()
+        apply_theme(app, mode)
+        for m, act in self._theme_actions.items():
+            act.setChecked(m == mode)
 
     # ------------------------------------------------------------------
     # Experiment execution

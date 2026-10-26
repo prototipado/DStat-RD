@@ -41,7 +41,7 @@ class MainWindowLayoutTests(unittest.TestCase):
         )
         self.assertEqual(self.window.btn_refresh.text(), "Refresh")
         self.assertEqual(self.window.btn_connect.text(), "Connect")
-        self.assertEqual(self.window.windowTitle().split("  v")[0], "DStat GUI 2.0")
+        self.assertEqual(self.window.windowTitle().split("  v")[0], "DStat GUI 2.1")
 
     def test_closed_serial_pipe_while_resuming_ocp_does_not_escape_qt_slot(self):
         serial_connection = Mock(is_connected=True)

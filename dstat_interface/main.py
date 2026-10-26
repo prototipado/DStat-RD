@@ -80,8 +80,12 @@ def main():
     crash_file = _configure_diagnostics()
     sys.excepthook = _log_unhandled_exception
     app = QApplication(sys.argv)
-    app.setApplicationName("DStat GUI 2.0")
+    app.setApplicationName("DStat GUI 2.1")
     app.setOrganizationName("Wheeler Microfluidics Laboratory")
+
+    # Apply persisted theme before building the window.
+    from dstat_interface.core.interface.theme_manager import apply_theme
+    apply_theme(app)
 
     window = MainWindow()
     app.aboutToQuit.connect(window._shutdown_serial_connection)

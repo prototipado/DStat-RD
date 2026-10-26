@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="dstat-gui-dev2",
-    version="2.0.0",
+    version="2.1.0",
     description="DStat potentiostat GUI, Python 3 / Qt6 edition",
     license="GPL-3.0",
     packages=find_packages(),
