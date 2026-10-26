@@ -219,9 +219,10 @@ class CalibrationDialog(QDialog):
             return
         try:
             state.ser.send_ctrl("a")
-            time.sleep(0.5)
+            time.sleep(1.0)
             state.ser.flush_data()
             state.ser.flush_proc()
+            time.sleep(0.5)
             comm.read_settings()
         except Exception as exc:
             QMessageBox.critical(self, "Read failed", str(exc))
@@ -261,10 +262,10 @@ class CalibrationDialog(QDialog):
         state.settings = OrderedDict(ordered)
         try:
             state.ser.send_ctrl("a")
-            time.sleep(1.0)
+            time.sleep(1.5)
             state.ser.flush_data()
             state.ser.flush_proc()
-            time.sleep(0.5)
+            time.sleep(1.0)
         except Exception:
             pass
         try:

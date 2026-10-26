@@ -190,12 +190,18 @@ class Experiment:
                 time.sleep(0.2)
                 self.serial.reset_input_buffer()
                 # Drain stale device->PC frames left over from a previous run.
-                # Multiple passes to catch bytes still in flight.
+                # Wait for a period of silence (no new bytes) to ensure all
+                # trailing frames have been consumed.
                 try:
-                    for _ in range(5):
-                        if getattr(self.serial, "in_waiting", 0):
-                            self.serial.read(self.serial.in_waiting)
-                        time.sleep(0.1)
+                    deadline = time.monotonic() + 1.0
+                    last_byte_time = time.monotonic()
+                    while time.monotonic() < deadline:
+                        n = getattr(self.serial, "in_waiting", 0)
+                        if n:
+                            self.serial.read(n)
+                            last_byte_time = time.monotonic()
+                            deadline = max(deadline, last_byte_time + 0.5)
+                        time.sleep(0.05)
                 except Exception:
                     pass
                 self.serial.write("!{}\n".format(n).encode())
