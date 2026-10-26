@@ -416,6 +416,13 @@ class MainWindow(QMainWindow):
 
         view_menu.addSeparator()
 
+        act_calib = QAction("Calibration / Device Settings…", self)
+        act_calib.setToolTip("Edit and write DStat EEPROM calibration settings")
+        act_calib.triggered.connect(self._on_calibration)
+        view_menu.addAction(act_calib)
+
+        view_menu.addSeparator()
+
         # Theme submenu
         theme_menu = view_menu.addMenu("Theme")
         from .theme_manager import load_preference, save_preference, apply_theme
@@ -914,6 +921,11 @@ class MainWindow(QMainWindow):
             pass
         for m, act in self._theme_actions.items():
             act.setChecked(m == mode)
+
+    def _on_calibration(self):
+        from .calibration_dialog import CalibrationDialog
+        dlg = CalibrationDialog(self)
+        dlg.exec()
 
     # ------------------------------------------------------------------
     # Experiment execution
