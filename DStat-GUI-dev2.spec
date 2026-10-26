@@ -19,6 +19,12 @@ for package in ("matplotlib", "scipy", "seaborn"):
 
 app = project_root + "/dstat_interface/main.py"
 
+# Bundle theme assets (QSS + icons) so they resolve at runtime.
+import os
+_theme_dir = os.path.join(project_root, "dstat_interface", "core", "interface")
+datas += [(os.path.join(_theme_dir, "styles.qss"), "dstat_interface/core/interface")]
+datas += [(os.path.join(_theme_dir, "icons"), "dstat_interface/core/interface/icons")]
+
 a = Analysis(
     [app],
     pathex=[project_root],

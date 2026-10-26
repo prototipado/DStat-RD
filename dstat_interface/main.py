@@ -75,7 +75,7 @@ def _log_unhandled_exception(exc_type, exc_value, exc_traceback):
 
 def main():
     from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import Qt
+    from PyQt6.QtCore import Qt
     from dstat_interface.core.interface.main_window import MainWindow
 
     crash_file = _configure_diagnostics()
