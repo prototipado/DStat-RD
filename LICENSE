@@ -1,3 +1,41 @@
+License Information
+===================
+
+This project is a derivative of the DStat potentiostat (Dryden & Wheeler, 2015).
+
+Hardware
+--------
+The DStat hardware schematics, layouts, and all other documentation describing
+the DStat hardware are licensed under the CERN Open Hardware Licence v1.2.
+Copyright (C) 2014 Michael D. M. Dryden.
+
+You may redistribute and modify this documentation under the terms of the
+CERN OHL v.1.2 (http://ohwr.org/cernohl). This documentation is distributed
+WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF MERCHANTABILITY,
+SATISFACTORY QUALITY AND FITNESS FOR A PARTICULAR PURPOSE. Please see the
+CERN OHL v.1.2 for applicable conditions.
+
+Software
+--------
+The computer interface (this GUI) and the microcontroller firmware are free
+software: you can redistribute them and/or modify them under the terms of the
+GNU General Public License as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later version.
+
+The computer interface and microcontroller firmware are distributed in the
+hope that they will be useful, but WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program. If not, see http://www.gnu.org/licenses/.
+
+---
+The full text of the GNU General Public License v3 follows.
+---
+
+
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
