@@ -127,6 +127,21 @@ def qss_path() -> str:
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), "styles.qss")
 
 
+def asset_path(name: str) -> str:
+    """Resolve a bundled asset path (works in dev and in PyInstaller)."""
+    base = getattr(sys, "_MEIPASS", None) if "sys" in globals() else None
+    if base is None:
+        import sys as _sys
+        base = getattr(_sys, "_MEIPASS", None)
+    if base is None:
+        base = os.path.dirname(os.path.abspath(__file__))
+        # assets live next to this module's package root (dstat_interface/)
+        base = os.path.join(base, "..", "..", "assets")
+    else:
+        base = os.path.join(base, "dstat_interface", "assets")
+    return os.path.join(base, name)
+
+
 def render_qss(palette: Palette) -> str:
     with open(qss_path(), encoding="utf-8") as f:
         template = f.read()

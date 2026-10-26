@@ -24,6 +24,8 @@ import os
 _theme_dir = os.path.join(project_root, "dstat_interface", "core", "interface")
 datas += [(os.path.join(_theme_dir, "styles.qss"), "dstat_interface/core/interface")]
 datas += [(os.path.join(_theme_dir, "icons"), "dstat_interface/core/interface/icons")]
+_assets_dir = os.path.join(project_root, "dstat_interface", "assets")
+datas += [(_assets_dir, "dstat_interface/assets")]
 
 a = Analysis(
     [app],

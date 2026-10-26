@@ -37,6 +37,7 @@ from ..experiments.experiment_loops import BaseLoop
 from ..analysis import AnalysisOptionsDialog, do_analysis
 from .. import validation
 from .exp_panel import ExperimentsPanel
+from .theme import asset_path
 from .plot_widget import PlotWidget
 from .data_view import DataView, InfoView
 from .protocol_view import ProtocolView
@@ -306,6 +307,10 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle(f"DStat GUI 2.1  v{VERSION}")
+        from PyQt6.QtGui import QIcon
+        icon_path = asset_path("open_potentiostat_dark.ico")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
         self.resize(1200, 800)
         self.setMinimumSize(960, 640)
 
