@@ -48,6 +48,7 @@ exe = EXE(
     [],
     exclude_binaries=True,
     name="DStat-GUI-dev2",
+    icon=os.path.join(_assets_dir, "open_potentiostat_dark.ico"),
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
