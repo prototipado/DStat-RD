@@ -563,10 +563,12 @@ class MainWindow(QMainWindow):
         hbox = QHBoxLayout()
 
         self.btn_execute = QPushButton("Execute")
+        self.btn_execute.setObjectName("btn_execute")
         self.btn_execute.setEnabled(False)
         self.btn_execute.clicked.connect(self._on_execute)
 
         self.btn_stop = QPushButton("Stop")
+        self.btn_stop.setObjectName("btn_stop")
         self.btn_stop.setEnabled(False)
         self.btn_stop.clicked.connect(self._on_stop)
 
@@ -598,10 +600,12 @@ class MainWindow(QMainWindow):
         grid.addWidget(self.btn_refresh, 0, 2)
 
         self.btn_connect = QPushButton("Connect")
+        self.btn_connect.setObjectName("btn_connect")
         self.btn_connect.clicked.connect(self._on_connect)
         grid.addWidget(self.btn_connect, 0, 3)
 
         self.btn_disconnect = QPushButton("Disconnect")
+        self.btn_disconnect.setObjectName("btn_disconnect")
         self.btn_disconnect.setEnabled(False)
         self.btn_disconnect.clicked.connect(self._on_disconnect)
         grid.addWidget(self.btn_disconnect, 0, 4)
@@ -899,6 +903,10 @@ class MainWindow(QMainWindow):
         save_preference(mode)
         app = QApplication.instance()
         apply_theme(app, mode)
+        try:
+            self.plot_widget.apply_theme()
+        except Exception:
+            pass
         for m, act in self._theme_actions.items():
             act.setChecked(m == mode)
 

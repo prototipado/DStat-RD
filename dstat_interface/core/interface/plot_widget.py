@@ -18,13 +18,11 @@ from matplotlib.backends.backend_qtagg import (
 )
 import matplotlib.gridspec as gridspec
 
-try:
-    import seaborn as sns
-    sns.set(context="paper", style="darkgrid")
-except ImportError:
-    pass
-
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
+from PyQt6.QtCore import Qt
+
+from .theme import ACCENT, FONT_FAMILY
+from .theme_manager import resolved_palette
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +35,7 @@ class PlotWidget(QWidget):
         self.figure = Figure(tight_layout=True)
         self.canvas = FigureCanvas(self.figure)
         self.toolbar = NavigationToolbar(self.canvas, self)
+        self.toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -46,6 +45,38 @@ class PlotWidget(QWidget):
         self.subplots: dict = {}
         self._lines: dict = {}
 
+        self.apply_theme()
+
+    def apply_theme(self, palette=None):
+        """Restyle the figure and all axes according to the active theme."""
+        if palette is None:
+            palette = resolved_palette()
+        dark = (palette.name == "dark")
+        bg = palette.bg
+        card = palette.card
+        fg = palette.fg
+        muted = palette.fg_muted
+        grid = palette.border
+
+        self.figure.set_facecolor(card)
+        self.canvas.setStyleSheet("background-color: %s;" % card)
+
+        for ax in self.figure.axes:
+            ax.set_facecolor(bg if dark else card)
+            ax.tick_params(colors=fg, labelsize=9)
+            ax.xaxis.label.set_color(fg)
+            ax.yaxis.label.set_color(fg)
+            ax.title.set_color(fg)
+            for spine in ax.spines.values():
+                spine.set_color(grid)
+            ax.grid(True, color=grid, alpha=0.35, linestyle="--", linewidth=0.8)
+            for line in ax.get_lines():
+                if line.get_color() in ("C0", "#1f77b4"):
+                    line.set_color(ACCENT)
+                    line.set_linewidth(1.8)
+
+        self.canvas.draw_idle()
+
     def setup_axes(self, plot_format: dict):
         """Create subplots from a plot_format dict (key → {xlabel, ylabel})."""
         self.figure.clf()
@@ -54,12 +85,28 @@ class PlotWidget(QWidget):
         self.subplots = {}
         self._lines = {}
 
+        palette = resolved_palette()
+        dark = (palette.name == "dark")
+        bg = palette.bg
+        card = palette.card
+        fg = palette.fg
+        grid = palette.border
+
+        self.figure.set_facecolor(card)
+
         for idx, (key, fmt) in enumerate(plot_format.items()):
             ax = self.figure.add_subplot(gs[idx])
+            ax.set_facecolor(bg if dark else card)
             ax.ticklabel_format(style="sci", scilimits=(0, 3), useOffset=False, axis="y")
             ax.set_xlabel(fmt.get("xlabel", ""))
             ax.set_ylabel(fmt.get("ylabel", ""))
-            (line,) = ax.plot([], [])
+            ax.tick_params(colors=fg, labelsize=9)
+            ax.xaxis.label.set_color(fg)
+            ax.yaxis.label.set_color(fg)
+            for spine in ax.spines.values():
+                spine.set_color(grid)
+            ax.grid(True, color=grid, alpha=0.35, linestyle="--", linewidth=0.8)
+            (line,) = ax.plot([], [], color=ACCENT, linewidth=1.8)
             self.subplots[key] = ax
             self._lines[key] = [line]
 
