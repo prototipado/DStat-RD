@@ -109,7 +109,7 @@ class SerialTrace:
             frames = self._data_frames + 1
             object.__setattr__(self, "_data_frames", frames)
             if frames % 200 == 0:
-                self.note(TRACE_INFO, "… {} data frames received".format(frames))
+                self.note(TRACE_INFO, "â€¦ {} data frames received".format(frames))
             return
         if kind == TRACE_RX and text.lstrip().startswith("#"):
             kind = TRACE_INFO
@@ -170,12 +170,6 @@ def _serial_process(ser_port, proc_pipe, ctrl_pipe, data_pipe, trace_queue=None)
     for attempt in range(5):
         try:
             ser = serial.Serial(ser_port, timeout=0.5, write_timeout=3)
-            # Avoid an implicit reset of the device on open: deassert DTR/RTS.
-            try:
-                ser.dtr = False
-                ser.rts = False
-            except Exception:
-                pass
             break
         except serial.SerialException as exc:
             last_error = exc
@@ -189,30 +183,13 @@ def _serial_process(ser_port, proc_pipe, ctrl_pipe, data_pipe, trace_queue=None)
                 f"{last_error or 'port is closed'}"
             )
 
-        # Let the device settle after open and clear any stale bytes.
-        time.sleep(0.5)
-        # Aggressive drain: read everything available, multiple passes.
-        try:
-            for _ in range(10):
-                n = getattr(ser, "in_waiting", 0)
-                if n:
-                    ser.read(n)
-                time.sleep(0.1)
-        except Exception:
-            pass
-        try:
-            ser.reset_input_buffer()
-            ser.reset_output_buffer()
-        except Exception:
-            pass
-
         # Every read/write from this point on is mirrored to the protocol
         # terminal in the GUI.
         trace = SerialTrace(ser, trace_queue)
 
-        # Single startup handshake (original behaviour). The device is
-        # expected to answer @ACK 0 / @RCV 0 to "!0 ".
+        # Original startup handshake (unchanged from baseline).
         trace.write(b'!0 ')
+
         for _ in range(12):
             line = trace.readline().rstrip().decode(errors="replace")
             if line == "@ACK 0":
