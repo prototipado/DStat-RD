@@ -81,7 +81,9 @@ def main():
     crash_file = _configure_diagnostics()
     sys.excepthook = _log_unhandled_exception
     app = QApplication(sys.argv)
-    app.setAttribute(Qt.ApplicationAttribute.AA_UseHighDpiPixmaps, True)
+    aa = getattr(Qt.ApplicationAttribute, "AA_UseHighDpiPixmaps", None)
+    if aa is not None:
+        app.setAttribute(aa, True)
     app.setApplicationName("DStat GUI 2.1")
     app.setOrganizationName("Wheeler Microfluidics Laboratory")
 
