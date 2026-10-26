@@ -75,11 +75,13 @@ def _log_unhandled_exception(exc_type, exc_value, exc_traceback):
 
 def main():
     from PyQt6.QtWidgets import QApplication
+from PyQt6.QtCore import Qt
     from dstat_interface.core.interface.main_window import MainWindow
 
     crash_file = _configure_diagnostics()
     sys.excepthook = _log_unhandled_exception
     app = QApplication(sys.argv)
+    app.setAttribute(Qt.ApplicationAttribute.AA_UseHighDpiPixmaps, True)
     app.setApplicationName("DStat GUI 2.1")
     app.setOrganizationName("Wheeler Microfluidics Laboratory")
 

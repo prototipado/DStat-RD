@@ -6,6 +6,7 @@ lines in real time as experiment data arrive.
 """
 
 import logging
+import os
 
 import numpy as np
 import matplotlib
@@ -14,8 +15,9 @@ matplotlib.use("QtAgg")
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import (
     FigureCanvasQTAgg as FigureCanvas,
-    NavigationToolbar2QT as NavigationToolbar,
+    NavigationToolbar2QT as _NavToolbar,
 )
+from PyQt6.QtGui import QIcon
 import matplotlib.gridspec as gridspec
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
@@ -26,6 +28,42 @@ from .theme_manager import resolved_palette
 
 logger = logging.getLogger(__name__)
 
+_ICONS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "icons")
+
+
+class ThemedNavigationToolbar(_NavToolbar):
+    """NavigationToolbar using our SVG icons, themed light/dark."""
+
+    def __init__(self, canvas, parent=None, coordinates=True):
+        self._dark = False
+        super().__init__(canvas, parent, coordinates=coordinates)
+        self._refresh_icons()
+
+    def set_dark(self, dark: bool):
+        self._dark = dark
+        self._refresh_icons()
+
+    def _refresh_icons(self):
+        suffix = "dark" if self._dark else "light"
+        for action in self.actions():
+            tip = action.toolTip() or action.text() or ""
+            # map by tooltip keywords
+            pass
+        # Rebuild icons by matching toolitem image names is not trivial after build;
+        # instead reload each action's icon from our svg based on its text.
+        name_map = {
+            "Home": "home", "Back": "back", "Forward": "forward",
+            "Pan": "move", "Zoom": "zoom_to_rect",
+            "Subplots": "subplots", "Customize": "qt4_editor_options",
+            "Save": "filesave",
+        }
+        for action in self.actions():
+            key = name_map.get(action.text())
+            if key:
+                path = os.path.join(_ICONS_DIR, "%s_%s.svg" % (key, suffix))
+                if os.path.exists(path):
+                    action.setIcon(QIcon(path))
+
 
 class PlotWidget(QWidget):
     """A QWidget that contains a matplotlib Figure with a navigation toolbar."""
@@ -34,7 +72,7 @@ class PlotWidget(QWidget):
         super().__init__(parent)
         self.figure = Figure(tight_layout=True)
         self.canvas = FigureCanvas(self.figure)
-        self.toolbar = NavigationToolbar(self.canvas, self)
+        self.toolbar = ThemedNavigationToolbar(self.canvas, self)
         self.toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
 
         layout = QVBoxLayout(self)
@@ -60,6 +98,7 @@ class PlotWidget(QWidget):
 
         self.figure.set_facecolor(card)
         self.canvas.setStyleSheet("background-color: %s;" % card)
+        self.toolbar.set_dark(dark)
 
         for ax in self.figure.axes:
             ax.set_facecolor(bg if dark else card)
