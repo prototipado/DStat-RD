@@ -201,28 +201,16 @@ def _serial_process(ser_port, proc_pipe, ctrl_pipe, data_pipe, trace_queue=None)
         # terminal in the GUI.
         trace = SerialTrace(ser, trace_queue)
 
-        # Retry the startup handshake a few times; the device may still be
-        # settling after the port was opened.
-        handshake_ok = False
-        for _attempt in range(3):
-            try:
-                ser.reset_input_buffer()
-            except Exception:
-                pass
-            trace.write(b'!0 ')
-            time.sleep(0.1)
-            for _ in range(12):
-                line = trace.readline().rstrip().decode(errors="replace")
-                if line == "@ACK 0":
-                    reply = trace.readline().rstrip().decode(errors="replace")
-                    if reply == "@RCV 0":
-                        handshake_ok = True
-                        break
-            if handshake_ok:
-                break
-            time.sleep(0.3)
-
-        if not handshake_ok:
+        # Single startup handshake (original behaviour). The device is
+        # expected to answer @ACK 0 / @RCV 0 to "!0 ".
+        trace.write(b'!0 ')
+        for _ in range(12):
+            line = trace.readline().rstrip().decode(errors="replace")
+            if line == "@ACK 0":
+                reply = trace.readline().rstrip().decode(errors="replace")
+                if reply == "@RCV 0":
+                    break
+        else:
             raise serial.SerialException(
                 f"No valid startup handshake received from {ser_port}."
             )
