@@ -12,7 +12,7 @@ import logging
 from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QFormLayout, QGroupBox, QLabel,
     QSpinBox, QCheckBox, QPushButton, QMessageBox,
-    QScrollArea, QWidget,
+    QScrollArea, QWidget, QProgressBar,
 )
 from PyQt6.QtCore import Qt, QEventLoop
 from collections import OrderedDict
@@ -172,6 +172,13 @@ class CalibrationDialog(QDialog):
         self.btn_measure.clicked.connect(self._measure)
         btns.addWidget(self.btn_measure)
 
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setRange(0, 100)
+        self.progress_bar.setValue(0)
+        self.progress_bar.setTextVisible(True)
+        self.progress_bar.setFormat("Idle")
+        outer.addWidget(self.progress_bar)
+
         self.btn_write = QPushButton("Write to device")
         self.btn_write.setObjectName("btn_execute")
         self.btn_write.clicked.connect(self._write)
@@ -313,8 +320,13 @@ class CalibrationDialog(QDialog):
         self.btn_measure.setEnabled(False)
         self.btn_read.setEnabled(False)
         self.btn_write.setEnabled(False)
+        self.progress_bar.setValue(0)
+        self.progress_bar.setFormat("Starting...")
         errors = []
-        for gain_idx in range(1, 8):
+        total_gains = 7
+        for i, gain_idx in enumerate(range(1, 8)):
+            self.progress_bar.setFormat("Measuring gain %d/7..." % (i + 1))
+            self.progress_bar.setValue(int(i / total_gains * 100))
             try:
                 state.ser.flush_data()
                 state.ser.flush_proc()
@@ -344,7 +356,9 @@ class CalibrationDialog(QDialog):
             except Exception as exc:
                 errors.append("gain %d: %s" % (gain_idx, exc))
                 logger.exception("Auto-calibrate gain %d failed", gain_idx)
+            self.progress_bar.setValue(int((i + 1) / total_gains * 100))
 
+        self.progress_bar.setFormat("Done")
         self.btn_measure.setEnabled(True)
         self.btn_read.setEnabled(True)
         self.btn_write.setEnabled(True)
