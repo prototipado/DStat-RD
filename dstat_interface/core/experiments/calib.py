@@ -120,7 +120,14 @@ class CalibExp(Experiment):
                             self.data_pipe.send(avg)
                         except Exception:
                             pass
-                        time.sleep(0.3)
+                        time.sleep(0.8)
+                        # Drain any trailing device->PC bytes.
+                        try:
+                            while getattr(self.serial, "in_waiting", 0):
+                                self.serial.read(self.serial.in_waiting)
+                                time.sleep(0.05)
+                        except Exception:
+                            pass
                         return True
 
         except Exception as exc:

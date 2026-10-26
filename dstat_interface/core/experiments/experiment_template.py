@@ -189,6 +189,13 @@ class Experiment:
             while True:
                 time.sleep(0.2)
                 self.serial.reset_input_buffer()
+                # Drain stale device->PC frames left over from a previous run.
+                try:
+                    while getattr(self.serial, "in_waiting", 0):
+                        self.serial.read(self.serial.in_waiting)
+                        time.sleep(0.05)
+                except Exception:
+                    pass
                 self.serial.write("!{}\n".format(n).encode())
                 time.sleep(0.1)
                 try:

@@ -8,6 +8,7 @@ the DStat EEPROM through the existing ``SW`` command.
 from __future__ import annotations
 
 import logging
+import time
 
 from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QFormLayout, QGroupBox, QLabel,
@@ -255,6 +256,12 @@ class CalibrationDialog(QDialog):
             ordered[k][1] = values.get(k, ordered[k][1])
         state.settings = OrderedDict(ordered)
         try:
+            state.ser.flush_data()
+            state.ser.flush_proc()
+            time.sleep(0.3)
+        except Exception:
+            pass
+        try:
             comm.write_settings()
         except Exception as exc:
             QMessageBox.critical(self, "Write failed", str(exc))
@@ -391,6 +398,11 @@ class CalibrationDialog(QDialog):
             self.progress_bar.setValue(int((i + 1) / total_gains * 100))
 
         self.progress_bar.setFormat("Done")
+        try:
+            state.ser.flush_data()
+            state.ser.flush_proc()
+        except Exception:
+            pass
         self.btn_measure.setEnabled(True)
         self.btn_read.setEnabled(True)
         self.btn_write.setEnabled(True)
