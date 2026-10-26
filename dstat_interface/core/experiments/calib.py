@@ -58,7 +58,7 @@ class CalibExp(Experiment):
         self.commands = [
             "EA2 3 1 ",
             "EG{} 0 ".format(gain_idx),
-            "ER1 32768 {} 0 ".format(time_s),
+            ("ER1 0 ", [32768, time_s]),
         ]
 
     def data_handler(self, data_input):

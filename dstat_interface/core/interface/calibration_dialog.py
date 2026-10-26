@@ -14,11 +14,10 @@ from PyQt6.QtWidgets import (
     QSpinBox, QCheckBox, QPushButton, QMessageBox,
     QScrollArea, QWidget, QProgressBar,
 )
-from PyQt6.QtCore import Qt, QEventLoop
+from PyQt6.QtCore import Qt, QEventLoop, QTimer
 from collections import OrderedDict
 
 from ..dstat import state, comm
-from ..experiments.experiment_loops import BaseLoop
 from ..experiments.calib import CalibExp
 from .theme_manager import resolved_palette
 
@@ -333,18 +332,51 @@ class CalibrationDialog(QDialog):
                 exp = CalibExp({"gain": gain_idx, "time": time_val})
                 state.ser.start_exp(exp)
 
-                loop = BaseLoop(exp, parent=self)
+                # Poll manually (no BaseLoop) so we can capture the offset.
                 ev = QEventLoop()
-                loop.experiment_done.connect(ev.quit)
-                loop.completion_error.connect(ev.quit)
-                loop.run()
-                ev.exec()
+                serial_error = {"v": False}
+                offset_holder = {"v": None}
 
-                if getattr(loop, "serial_error", False):
+                def poll():
+                    try:
+                        # data
+                        incoming = state.ser.get_data()
+                        while incoming is not None:
+                            # CalibExp sends the averaged offset as a single int
+                            # via data_pipe at @DONE. Capture it.
+                            if isinstance(incoming, int):
+                                offset_holder["v"] = incoming
+                            elif isinstance(incoming, (list, tuple)) and len(incoming) == 1 and isinstance(incoming[0], int):
+                                offset_holder["v"] = incoming[0]
+                            incoming = state.ser.get_data()
+                        # proc
+                        proc = state.ser.get_proc()
+                        if proc is not None:
+                            if proc in ("DONE", "SERIAL_ERROR", "ABORT"):
+                                if proc == "SERIAL_ERROR":
+                                    serial_error["v"] = True
+                                ev.quit()
+                    except Exception as exc:
+                        logger.exception("poll error: %s", exc)
+                        ev.quit()
+
+                timer = QTimer(self)
+                timer.timeout.connect(poll)
+                timer.start(50)
+                ev.exec()
+                timer.stop()
+
+                if serial_error["v"]:
                     errors.append("gain %d: serial error" % gain_idx)
                     continue
 
-                offset = state.ser.get_data(block=True, timeout=10)
+                offset = offset_holder["v"]
+                if offset is None:
+                    # try one last blocking read
+                    try:
+                        offset = state.ser.get_data(block=True, timeout=5)
+                    except Exception:
+                        offset = None
                 if offset is None:
                     errors.append("gain %d: no data" % gain_idx)
                     continue
