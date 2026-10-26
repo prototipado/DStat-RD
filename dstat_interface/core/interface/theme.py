@@ -130,6 +130,12 @@ def qss_path() -> str:
 def render_qss(palette: Palette) -> str:
     with open(qss_path(), encoding="utf-8") as f:
         template = f.read()
+
+    icons_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "icons")
+    arrow_name = "arrow_down_dark.svg" if palette.name == "dark" else "arrow_down_light.svg"
+    arrow_icon = os.path.join(icons_dir, arrow_name).replace("\\", "/")
+    check_icon = os.path.join(icons_dir, "checkmark.svg").replace("\\", "/")
+
     tokens = {
         "bg": palette.bg,
         "bg_alt": palette.bg_alt,
@@ -163,5 +169,7 @@ def render_qss(palette: Palette) -> str:
         "font_size_small": FONT_SIZE_SMALL,
         "font_size_title": FONT_SIZE_TITLE,
         "font_size_heading": FONT_SIZE_HEADING,
+        "arrow_icon": arrow_icon,
+        "check_icon": check_icon,
     }
     return template.format(**tokens)

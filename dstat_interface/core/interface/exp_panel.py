@@ -66,6 +66,8 @@ class ExpInterface(QWidget):
     def _build_preconditioning_group(self) -> QGroupBox:
         """Shared 'Preconditioning' group: Cleaning and Deposition rows."""
         grp = QGroupBox("Preconditioning")
+        grp.setObjectName("subgroup")
+        grp.setFlat(True)
         grid = QGridLayout(grp)
         grid.setColumnStretch(1, 1)
         grid.setColumnStretch(2, 1)
@@ -94,6 +96,8 @@ class ExpInterface(QWidget):
     def _build_experiment_group(self, title: str = "Experiment") -> tuple:
         """Return (QGroupBox, QFormLayout) for technique-specific params."""
         grp = QGroupBox(title)
+        grp.setObjectName("subgroup")
+        grp.setFlat(True)
         form = QFormLayout(grp)
         form.setFieldGrowthPolicy(QFormLayout.FieldGrowthPolicy.AllNonFixedFieldsGrow)
         return grp, form

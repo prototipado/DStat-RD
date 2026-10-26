@@ -79,11 +79,12 @@ class ProtocolView(QWidget):
         font.setBold(True)
         title.setFont(font)
         header.addWidget(title)
+        header.addStretch()
 
         hint = QLabel("GUI \u2192 DStat / DStat \u2192 GUI")
         hint.setStyleSheet("color: #777;")
+        hint.setWordWrap(True)
         header.addWidget(hint)
-        header.addStretch()
 
         self.btn_clear = QPushButton("Clear")
         self.btn_clear.setToolTip("Clear the protocol log")
@@ -96,29 +97,36 @@ class ProtocolView(QWidget):
         header.addWidget(self.btn_save)
         layout.addLayout(header)
 
-        filters = QHBoxLayout()
-        filters.setSpacing(8)
+        filters = QVBoxLayout()
+        filters.setSpacing(4)
 
+        row1 = QHBoxLayout()
+        row1.setSpacing(8)
         self.check_tx = QCheckBox("GUI \u2192 DStat")
         self.check_tx.setChecked(True)
         self.check_tx.setStyleSheet("color: {};".format(KIND_COLORS["tx"]))
-        filters.addWidget(self.check_tx)
+        row1.addWidget(self.check_tx)
 
         self.check_rx = QCheckBox("DStat \u2192 GUI")
         self.check_rx.setChecked(True)
         self.check_rx.setStyleSheet("color: {};".format(KIND_COLORS["rx"]))
-        filters.addWidget(self.check_rx)
+        row1.addWidget(self.check_rx)
+        row1.addStretch()
+        filters.addLayout(row1)
 
+        row2 = QHBoxLayout()
+        row2.setSpacing(8)
         self.check_notes = QCheckBox("Notas")
         self.check_notes.setChecked(True)
         self.check_notes.setToolTip("Firmware information, warnings and errors")
-        filters.addWidget(self.check_notes)
+        row2.addWidget(self.check_notes)
 
         self.check_autoscroll = QCheckBox("Auto-scroll")
         self.check_autoscroll.setChecked(True)
-        filters.addWidget(self.check_autoscroll)
+        row2.addWidget(self.check_autoscroll)
+        row2.addStretch()
+        filters.addLayout(row2)
 
-        filters.addStretch()
         layout.addLayout(filters)
 
         self.text = QPlainTextEdit()

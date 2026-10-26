@@ -455,7 +455,6 @@ class MainWindow(QMainWindow):
         left_layout.addWidget(self._build_adc_group())
         left_layout.addWidget(self._build_gain_group())
         left_layout.addWidget(self._build_exp_group())
-        left_layout.addWidget(self._build_control_group())
         left_layout.addStretch()
 
         scroll = QScrollArea()
@@ -465,6 +464,9 @@ class MainWindow(QMainWindow):
         scroll.setMaximumWidth(380)
         scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         scroll.setFrameShape(QFrame.Shape.NoFrame)
+
+        # Execute/Stop fixed at the bottom of the left column (outside scroll).
+        self._control_bar = self._build_control_group()
 
         right_contents = QWidget()
         right_layout = QVBoxLayout(right_contents)
@@ -482,15 +484,22 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(self.info_view,  "Info")
         right_layout.addWidget(self.tabs, 1)
 
+        left_column = QWidget()
+        left_column_layout = QVBoxLayout(left_column)
+        left_column_layout.setContentsMargins(0, 0, 0, 0)
+        left_column_layout.setSpacing(4)
+        left_column_layout.addWidget(scroll, 1)
+        left_column_layout.addWidget(self._control_bar)
+
         splitter = QSplitter(Qt.Orientation.Horizontal)
-        splitter.addWidget(scroll)
+        splitter.addWidget(left_column)
         splitter.addWidget(right_contents)
 
         # Protocol terminal on the right-hand side.  It is part of the main
         # splitter so the user can resize or collapse it while reviewing the
         # serial conversation.
         self.protocol_view = ProtocolView()
-        self.protocol_view.setMinimumWidth(240)
+        self.protocol_view.setMinimumWidth(260)
         splitter.addWidget(self.protocol_view)
 
         splitter.setSizes([300, 560, 340])
@@ -575,6 +584,9 @@ class MainWindow(QMainWindow):
     def _build_comm_group(self) -> QGroupBox:
         grp = QGroupBox("Communications")
         grid = QGridLayout(grp)
+        grid.setContentsMargins(8, 4, 8, 4)
+        grid.setVerticalSpacing(4)
+        grid.setHorizontalSpacing(6)
 
         grid.addWidget(QLabel("Serial Port:"), 0, 0)
         self.port_combo = QComboBox()
@@ -587,17 +599,17 @@ class MainWindow(QMainWindow):
 
         self.btn_connect = QPushButton("Connect")
         self.btn_connect.clicked.connect(self._on_connect)
-        grid.addWidget(self.btn_connect, 1, 0)
+        grid.addWidget(self.btn_connect, 0, 3)
 
         self.btn_disconnect = QPushButton("Disconnect")
         self.btn_disconnect.setEnabled(False)
         self.btn_disconnect.clicked.connect(self._on_disconnect)
-        grid.addWidget(self.btn_disconnect, 1, 1)
+        grid.addWidget(self.btn_disconnect, 0, 4)
 
-        grid.addWidget(QLabel("OCP (V):"), 2, 0)
+        grid.addWidget(QLabel("OCP (V):"), 1, 0)
         self.ocp_label = QLabel("---")
         self.ocp_label.setFrameShape(QFrame.Shape.StyledPanel)
-        grid.addWidget(self.ocp_label, 2, 1, 1, 2)
+        grid.addWidget(self.ocp_label, 1, 1, 1, 4)
 
         return grp
 
@@ -615,7 +627,8 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.autosave_dir, 1)
 
         btn_browse = QPushButton("…")
-        btn_browse.setFixedWidth(30)
+        btn_browse.setMinimumWidth(36)
+        btn_browse.setToolTip("Browse folder")
         btn_browse.clicked.connect(self._browse_autosave_dir)
         layout.addWidget(btn_browse)
 

@@ -70,6 +70,22 @@ QGroupBox::title {{
     background-color: {card};
 }}
 
+/* Nested (flat) group boxes: subtitle only, no card chrome */
+QGroupBox#subgroup {{
+    background-color: transparent;
+    border: none;
+    margin-top: 8px;
+    padding: 2px 0 0 0;
+    font-weight: 600;
+    font-size: {font_size}pt;
+    color: {fg_muted};
+}}
+QGroupBox#subgroup::title {{
+    color: {fg_muted};
+    background-color: transparent;
+    padding: 0;
+}}
+
 /* ---- Inputs ---- */
 QComboBox, QLineEdit, QSpinBox, QDoubleSpinBox {{
     background-color: {input_bg};
@@ -93,7 +109,15 @@ QComboBox:disabled, QLineEdit:disabled {{
 }}
 QComboBox::drop-down {{
     border: none;
-    width: 22px;
+    width: 24px;
+    border-top-right-radius: {radius_small}px;
+    border-bottom-right-radius: {radius_small}px;
+}}
+QComboBox::down-arrow {{
+    image: url({arrow_icon});
+    width: 10px;
+    height: 6px;
+    margin-right: 6px;
 }}
 QComboBox QAbstractItemView {{
     background-color: {card};
@@ -273,7 +297,7 @@ QCheckBox::indicator:hover {{
 QCheckBox::indicator:checked {{
     background-color: {accent};
     border-color: {accent};
-    image: url(none);
+    image: url({check_icon});
 }}
 
 /* ---- Labels ---- */
