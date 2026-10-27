@@ -50,7 +50,8 @@
 ```text
 ├── gui/                      # Código fuente de la interfaz gráfica y dependencias
 ├── mechanical/               # Modelos CAD, STEP, STL para impresión 3D y planos
-├── docs/                     # Manuales de usuario, montaje, conexión y calibración
+├── docs/                     # Manuales, montaje, conexión, calibración y caracterización
+├── tools/                    # Utilidades y scripts de análisis de señales y validación
 ├── assets/                   # Fotografías, capturas de pantalla y diagramas
 ├── CONTRIBUTING.md           # Guía de contribución para código, CAD y docs
 ├── LICENSE                   # Licencia del proyecto
@@ -102,6 +103,7 @@ Para consultar los manuales completos, visita la carpeta [`docs/`](./docs/):
 - [Conexión al Instrumento](./docs/connection.md)
 - [Procedimiento de Calibración](./docs/calibration.md)
 - [Solución de Problemas (Troubleshooting)](./docs/troubleshooting.md)
+- [Caracterización y Validación Experimental](./docs/characterization/README.md)
 
 ---
 

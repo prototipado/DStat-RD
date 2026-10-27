@@ -20,3 +20,6 @@
 
 5. **[Solución de Problemas (Troubleshooting)](./troubleshooting.md)**  
    Diagnóstico de problemas frecuentes de comunicación USB, fallos de alimentación, ruidos electromagnéticos y modo DFU.
+
+6. **[Caracterización y Validación Experimental](./characterization/README.md)**  
+   Ensayos con celdas pasivas de prueba (dummy cell de 1 MΩ, 4 MΩ y circuito abierto), evaluación del blindaje electrostático, efecto del filtro de 50/60 Hz, reportes de [Cronoamperometría](./characterization/chronoamperometry.md) y [Barridos de Potencial](./characterization/sweep.md).
