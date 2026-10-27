@@ -537,5 +537,5 @@ DStat GUI incluye soporte nativo para automatización de experimentos electroqu�
 - 📖 **[Montaje y Conexión de Celdas (connection.md)](./connection.md):** Diagrama de conexionado físico de 2 y 3 electrodos y apantallamiento.
 - ⚙️ **[Procedimiento de Calibración (calibration.md)](./calibration.md):** Calibración de ganancias TIA y offsets con resistencias patrón.
 - 🛠️ **[Solución de Fallas y Driver (troubleshooting.md)](./troubleshooting.md):** Procedimiento para reconocimiento del puerto COM y recuperación en modo DFU con Atmel FLIP.
-- 📈 **[Ensayos y Verificación con Señales (test-signals.md)](./test-signals.md):** Resultados de pruebas experimentales de adquisición con cargas resistivas conocidas.
+- 📈 **[Caracterización y Validación Experimental (characterization)](./characterization/README.md):** Ensayos con cargas resistivas conocidas (dummy cell de 1 MΩ, 4 MΩ y circuito abierto), evaluación de blindaje y filtrado de red.
 - 🏗️ **[Montaje Mecánico y Carcasa (assembly.md)](./assembly.md):** Manual de ensamble del gabinete 3D y mecanizado.
