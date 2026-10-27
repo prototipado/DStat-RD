@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+*.egg
+build/
+dist/
+
+# Venv
+.venv/
+venv/
+env/
+
+# Qt / IDE
+*.ui.user
+.idea/
+.vscode/
+
+# Data / experiments
+*.csv
+*.xlsx
+*.h5
+*.npz
+*.npy
+*.pkl
+*.pickle
+*.parquet
+*.feather
+data/
+exports/
+autosave/
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
