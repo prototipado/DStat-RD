@@ -21,8 +21,12 @@ Para calibración y verificación funcional se recomienda una celda simulada con
 
 ## 📋 Pasos de Calibración
 
+> [!IMPORTANT]
+> **Condición previa de hardware (Limpieza de PCB):**  
+> Antes de realizar cualquier calibración de ganancia u offset del TIA, asegúrese de que la placa haya sido **lavada en batea de ultrasonido con alcohol isopropílico (IPA)** para eliminar todo resto de flux de soldadura. Los residuos de flux introducen corrientes de fuga parásitas de hasta decenas de nanoamperios que falsean la respuesta lineal en corrientes bajas (ver [Caracterización](./characterization/chronoamperometry.md)).
+
 1. Conectar la celda dummy adecuada.
-2. Desde la GUI, acceder a la pestaña o ventana de **Calibración**.
-3. Ejecutar la rutina automática de barrido de offset y ganancia.
-4. Verificar que la pendiente I vs. V cumpla con la Ley de Ohm ($I = V / R$).
-5. Guardar los coeficientes resultantes en el perfil de calibración del instrumento.
+2. Desde la GUI, acceder a **View → Calibration / Device Settings…**.
+3. Presionar **Read from device** para obtener los coeficientes actuales grabados en la EEPROM.
+4. Ajustar el offset del DAC y los trims de ganancia TIA contrastando contra la corriente teórica por Ley de Ohm ($I = V / R$).
+5. Presionar **Write to device** para almacenar los coeficientes calibrados de forma persistente.

@@ -178,3 +178,10 @@ Desconectar y volver a conectar el cable USB. El microcontrolador arrancará aho
 ### 4. Lecturas saturadas o en fondo de escala
 - **Causa:** Rango de ganancia TIA demasiado alto para la corriente generada, o circuito abierto en los electrodos.
 - **Acción:** Seleccionar un rango de corriente más amplio en la GUI o revisar la continuidad física de los electrodos en la solución.
+
+### 5. Desvío constante de corriente u offset elevado en corrientes bajas (nanoamperios)
+- **Causa:** Residuos de flux de soldadura en la superficie de la PCB. El flux crea caminos de conducción parásitos microscópicos que introducen fugas de corriente continua de hasta 15–20 nA hacia los nodos de alta impedancia del TIA.
+- **Acción:**
+  - Desmontar la PCB y realizar un **lavado por ultrasonido con alcohol isopropílico (IPA)** de pureza ≥ 99.5% durante 5 a 10 minutos.
+  - Secar minuciosamente con aire comprimido limpio y tibio antes de volver a energizar.
+  - En los ensayos experimentales de DStat-RD, este lavado eliminó las corrientes de fuga, reduciendo el error en resistencias de 4 MΩ del **+70.9%** a **-0.66%** (ver [Reporte de Caracterización](./characterization/chronoamperometry.md)).
