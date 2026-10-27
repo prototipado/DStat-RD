@@ -1,6 +1,12 @@
-# DStat-RD / DStat-Next
+<p align="center">
+  <img src="assets/covers/dstat_logo.png" alt="DStat-RD Logo" width="180" />
+</p>
 
-> Potenciostato / Galvanostato de código abierto basado en la plataforma DStat, adaptado y modernizado para investigación, docencia y aplicaciones de laboratorio.
+<h1 align="center">DStat-RD</h1>
+
+<p align="center">
+  <strong>Potenciostato / Galvanostato de código abierto</strong> basado en la plataforma DStat, adaptado y modernizado para investigación, docencia y aplicaciones de laboratorio.
+</p>
 
 ---
 
@@ -39,9 +45,9 @@
 
 ## 📸 Galería
 
-| Equipo y Carcasa | Captura de Interfaz (GUI) |
-| :---: | :---: |
-| *(Foto del equipo en `assets/photos/`)* | *(Captura de GUI en `assets/gui/`)* |
+| Identidad / Software | Equipo y Carcasa | Captura de Interfaz (GUI) |
+| :---: | :---: | :---: |
+| <img src="assets/covers/dstat_logo.png" width="120" /> | *(Foto del equipo en `assets/photos/`)* | *(Captura de GUI en `assets/gui/`)* |
 
 ---
 
