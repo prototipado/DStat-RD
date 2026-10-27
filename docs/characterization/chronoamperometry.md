@@ -7,8 +7,8 @@ Este reporte detalla los experimentos de cronoamperometría ejecutados aplicando
 ## 🔬 Condiciones Experimentales
 
 Se evaluaron tres configuraciones de carga conectadas entre el electrodo de trabajo (WE) y el contra/referencia (CE/RE):
-1. **$R_{\text{test}} = 1\text{ M}\Omega$:** Corriente teórica esperada $I = 100\text{ mV} / 1\text{ M}\Omega = 100.0\text{ nA}$.
-2. **$R_{\text{test}} = 4\text{ M}\Omega$:** Corriente teórica esperada $I = 100\text{ mV} / 4\text{ M}\Omega = 25.0\text{ nA}$.
+1. **$R_{\text{test}} = 1\text{ M}\Omega$:** Resistor de precisión **Vitrohm 401 (1 MΩ, tolerancia nominal: ±0.1%)**. Corriente teórica esperada $I = 100\text{ mV} / 1\text{ M}\Omega = 100.0\text{ nA}$.
+2. **$R_{\text{test}} = 4\text{ M}\Omega$:** Resistor de precisión **Vitrohm 403 (4 MΩ, tolerancia nominal: ±1.0%)**. Corriente teórica esperada $I = 100\text{ mV} / 4\text{ M}\Omega = 25.0\text{ nA}$.
 3. **Circuito Abierto ($R_{\text{test}} = \text{Open}$):** Corriente teórica esperada $I = 0.0\text{ nA}$ (evaluación de corriente de polarización / offset de entrada).
 
 Para cada carga, se contrastaron tres escenarios de adquisición:
