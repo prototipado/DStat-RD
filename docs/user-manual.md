@@ -46,6 +46,9 @@ python -m dstat_interface.main
 ```
 
 <!-- CAPTURA: Ventana principal completa con todas las secciones visibles -->
+<p align="center">
+  <img src="../assets/diagrams/gui_ventana_principal.png" alt="Ventana Principal DStat GUI v2.1" width="800" />
+</p>
 
 ---
 
@@ -78,6 +81,9 @@ Las columnas pueden redimensionarse arrastrando los separadores. La columna dere
 > Se ubica en la barra inferior de la ventana.
 
 <!-- CAPTURA: Panel Communications con el combo de puerto, botones y campo OCP -->
+<p align="center">
+  <img src="../assets/diagrams/gui_panel_comms.png" alt="Panel Communications" width="700" />
+</p>
 
 | Control | Función |
 |---------|---------|
@@ -96,6 +102,9 @@ La **barra de estado** inferior muestra el estado de la conexión y mensajes de 
 > Panel **ADC Settings** en la columna izquierda.
 
 <!-- CAPTURA: Grupo ADC Settings con los cuatro controles visibles -->
+<p align="center">
+  <img src="../assets/diagrams/gui_adc_settings.png" alt="Grupo ADC Settings" width="380" />
+</p>
 
 | Control | Opciones / Rango | Descripción |
 |---------|-----------------|-------------|
@@ -113,6 +122,9 @@ La **barra de estado** inferior muestra el estado de la conexión y mensajes de 
 > Panel **Potentiostat Settings** en la columna izquierda.
 
 <!-- CAPTURA: Panel Potentiostat Settings mostrando el combo Gain -->
+<p align="center">
+  <img src="../assets/diagrams/gui_gain_pot.png" alt="Potentiostat Settings - Ganancia TIA" width="380" />
+</p>
 
 | Control | Descripción |
 |---------|-------------|
@@ -139,6 +151,9 @@ La relación entre ganancia y escala de corriente medible es aproximadamente:
 > Panel **Experiment** en la columna izquierda, con un combo de selección de técnica en la parte superior.
 
 <!-- CAPTURA: Panel Experiment con la técnica CV seleccionada -->
+<p align="center">
+  <img src="../assets/diagrams/gui_exp_cv.png" alt="Panel Experiment con técnica CV" width="380" />
+</p>
 
 ### Selección de Técnica
 
@@ -164,6 +179,9 @@ Al cambiar la técnica, el panel de parámetros debajo del combo se actualiza au
 > Disponible en CV, LSV y SWV. Aparece como grupo colapsable dentro del panel de cada técnica.
 
 <!-- CAPTURA: Subgrupo Preconditioning con campos Cleaning y Deposition -->
+<p align="center">
+  <img src="../assets/diagrams/gui_exp_precond.png" alt="Grupo Preconditioning" width="380" />
+</p>
 
 El preacondicionamiento se ejecuta **automáticamente antes** del experimento principal. Tiene dos etapas independientes configurables:
 
@@ -181,6 +199,9 @@ Dejar ambos campos de tiempo en `0` deshabilita esa etapa completamente.
 > Panel **Experiment Control** en la parte inferior de la columna izquierda.
 
 <!-- CAPTURA: Panel Experiment Control con botones Execute, Stop y barra de progreso -->
+<p align="center">
+  <img src="../assets/diagrams/gui_exp_control.png" alt="Panel Experiment Control" width="380" />
+</p>
 
 | Control | Estado inicial | Función |
 |---------|---------------|---------|
@@ -194,12 +215,14 @@ Dejar ambos campos de tiempo en `0` deshabilita esa etapa completamente.
 
 > Tabs en la columna central: **Plot**, **Raw Data**, **Info**.
 
-<!-- CAPTURA: Tab Plot con una curva de CV activa -->
-
 ### Tab Plot
 Muestra el gráfico en tiempo real durante la adquisición. El eje X y el eje Y se ajustan automáticamente según la técnica:
 - **CV / LSV / SWV / DPV:** Potencial (mV o V) vs. Corriente (A o µA).
 - **CA / Potentiometry:** Tiempo (s) vs. Corriente (A) o Tensión (V).
+
+<p align="center">
+  <img src="../assets/diagrams/gui_tab_plot.png" alt="Pestaña Plot con curva de voltamperometría cíclica" width="750" />
+</p>
 
 La barra de herramientas embebida de Matplotlib permite:
 - Zoom (rectángulo o scroll).
@@ -207,15 +230,19 @@ La barra de herramientas embebida de Matplotlib permite:
 - Resetear la vista a los datos.
 - Guardar el gráfico directamente.
 
-<!-- CAPTURA: Tab Raw Data mostrando columnas de datos numéricos -->
-
 ### Tab Raw Data
 Tabla numérica con los datos crudos en columnas de tiempo/potencial y corriente, tal como son recibidos del instrumento.
 
-<!-- CAPTURA: Tab Info mostrando los metadatos del experimento -->
+<p align="center">
+  <img src="../assets/diagrams/gui_raw_data.png" alt="Pestaña Raw Data con datos numéricos" width="750" />
+</p>
 
 ### Tab Info
 Muestra información del experimento completado: técnica utilizada, parámetros empleados, duración, número de puntos adquiridos y estadísticas básicas si el análisis post-adquisición está habilitado.
+
+<p align="center">
+  <img src="../assets/diagrams/gui_tab_info.png" alt="Pestaña Info con metadatos del experimento" width="750" />
+</p>
 
 ---
 
@@ -223,7 +250,7 @@ Muestra información del experimento completado: técnica utilizada, parámetros
 
 > Menú **File**.
 
-<!-- CAPTURA: Menú File desplegado -->
+<!-- CAPTURA PENDIENTE: Diálogo File -> Save Data... -->
 
 | Acción | Formato | Descripción |
 |--------|---------|-------------|
@@ -239,6 +266,9 @@ Muestra información del experimento completado: técnica utilizada, parámetros
 > Barra **Autosave** en la parte superior de la columna central.
 
 <!-- CAPTURA: Barra Autosave con el checkbox, campo de carpeta y de nombre de archivo -->
+<p align="center">
+  <img src="../assets/diagrams/gui_autosave.png" alt="Barra Autosave" width="700" />
+</p>
 
 | Control | Descripción |
 |---------|-------------|
@@ -253,6 +283,9 @@ Muestra información del experimento completado: técnica utilizada, parámetros
 > **View → Calibration / Device Settings…**
 
 <!-- CAPTURA: Ventana de calibración con los grupos DAC, Current gain trims y sección de botones Read/Write -->
+<p align="center">
+  <img src="../assets/diagrams/gui_cal.png" alt="Diálogo Calibration / Device Settings" width="600" />
+</p>
 
 El diálogo **Calibration / Device Settings** permite ajustar los parámetros de calibración almacenados en la EEPROM del instrumento.
 
@@ -288,6 +321,9 @@ El diálogo **Calibration / Device Settings** permite ajustar los parámetros de
 > **Analysis → Analysis Options…** + **Analysis → Run Analysis**
 
 <!-- CAPTURA: Diálogo Analysis Options con el grupo Statistics -->
+<p align="center">
+  <img src="../assets/diagrams/gui_anali_options.png" alt="Diálogo Analysis Options" width="500" />
+</p>
 
 Tras finalizar un experimento, se puede ejecutar análisis estadístico básico sobre los datos adquiridos:
 
@@ -305,6 +341,9 @@ Presionar **Analysis → Run Analysis** ejecuta el análisis con los parámetros
 > Columna derecha. Visible/oculta con **View → Protocol Terminal** (`Ctrl+P`).
 
 <!-- CAPTURA: Panel Protocol Terminal mostrando el log de la conversación serie -->
+<p align="center">
+  <img src="../assets/diagrams/gui_terminal.png" alt="Protocol Terminal" width="450" />
+</p>
 
 Muestra en tiempo real la conversación serie bidireccional entre la GUI y el microcontrolador del DStat. Útil para diagnóstico de comunicación y depuración.
 
@@ -431,6 +470,9 @@ Los parámetros de cada experimento son validados automáticamente por la GUI an
 ## 17. Menús de la Aplicación y Atajos
 
 <!-- CAPTURA: Barra superior de menús desplegada (File / View / Help) -->
+<p align="center">
+  <img src="../assets/diagrams/gui_menu.png" alt="Barra de menús desplegada" width="600" />
+</p>
 
 ### Menú File (Archivo)
 - **Save Current Data…:** Guarda los datos del último experimento en formato tabular (TSV/CSV/XML).
@@ -463,7 +505,7 @@ Los parámetros de cada experimento son validados automáticamente por la GUI an
 
 ## 18. Flujo de Trabajo Típico (Paso a Paso)
 
-<!-- CAPTURA: Secuencia de trabajo mostrando celda conectada y gráfica en adquisición -->
+<!-- CAPTURA PENDIENTE: Secuencia de trabajo con celda conectada y cables apantallados -->
 
 Para realizar una medición voltamperométrica o amperométrica estándar, siga esta secuencia:
 
@@ -508,19 +550,23 @@ Para realizar una medición voltamperométrica o amperométrica estándar, siga 
 
 ## 19. Integración con Microfluídica (DropBot)
 
-<!-- CAPTURA: Menú DropBot o esquema de conexión DropBot-DStat -->
+> [!WARNING]
+> **Estado: Funcionalidad No Testeada en DStat-RD**  
+> La integración con DropBot (µDrop vía ZeroMQ) es una característica heredada del software original del Wheeler Microfluidics Lab. **Actualmente no ha sido testeada ni validada con el hardware de DStat-RD**. Se mantiene disponible en la interfaz para compatibilidad con sistemas DMF (Digital Microfluidics), pero su correcto funcionamiento no está garantizado sin validación previa en laboratorio.
 
-DStat GUI incluye soporte nativo para automatización de experimentos electroquímicos integrados con el sistema de microfluídica digital **DropBot** del Wheeler Microfluidics Lab mediante comunicación ZMQ:
+<!-- CAPTURA PENDIENTE: Menú DropBot o esquema de conexión DropBot-DStat (No testeado) -->
 
-- La GUI actúa como nodo de escucha esperando comandos JSON a través del puerto configurado por ZMQ.
-- Permite desencadenar secuencias de movimiento de gotas seguidas de adquisiciones electroquímicas coordinadas sin intervención manual.
-- Si no utiliza DropBot, no requiere ninguna configuración adicional y el menú puede mantenerse inactivo.
+DStat GUI incluye soporte para automatización de experimentos electroquímicos integrados con el sistema de microfluídica digital **DropBot** mediante comunicación ZMQ:
+
+- La GUI actúa como nodo de escucha esperando comandos JSON a través del puerto configurado por ZMQ (`tcp://*:...`).
+- En un sistema DropBot validado, permite desencadenar secuencias de movimiento y mezcla de gotas seguidas de adquisiciones electroquímicas coordinadas sin intervención manual del operador.
+- **Para uso autónomo del DStat-RD:** Esta función debe permanecer desconectada (`Dropbot → Disconnect`). No es requerida para mediciones electroquímicas convencionales en celda o electrodos serigrafiados (SPE).
 
 ---
 
 ## 20. Diagnóstico Rápido de Señales Anómalas
 
-<!-- CAPTURA: Gráfica con señal saturada (línea plana horizontal superior o inferior) -->
+<!-- CAPTURA PENDIENTE: Gráfica con señal saturada (línea plana horizontal superior o inferior / clipping) -->
 
 | Síntoma en la Gráfica | Causa Probable | Acción Correctiva |
 |-----------------------|----------------|-------------------|
