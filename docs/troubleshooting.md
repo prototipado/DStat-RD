@@ -82,6 +82,7 @@ En el Administrador de dispositivos, el puerto figurará activo y sin signos de 
 ---
 
 ### 2. El microcontrolador queda bloqueado en modo DFU
+
 - **Síntoma en Windows:** En el Administrador de dispositivos no figura ningún puerto COM, sino una entrada bajo **Microchip Tools** (o *Atmel USB Devices*) identificada como **`ATxmega256A3U`**:
 
 <p align="center">
@@ -89,13 +90,83 @@ En el Administrador de dispositivos, el puerto figurará activo y sin signos de 
 </p>
 
 - **Causa:** El firmware principal no arranca (firmware corrupto o memoria borrada), o la línea de selección de bootloader quedó retenida en nivel bajo (forzando el arranque del bootloader USB de fábrica).
-- **Acción:**
-  - Verificar tensiones en los rieles de alimentación (+3.3V, +5V, ±V analógico).
-  - Volver a flashear el archivo de firmware `.hex` utilizando `dfu-util` o Atmel FLIP:
-    ```bash
-    dfu-util -d 03eb:2fe2 -a 0 -D dstat-firmware.hex
-    ```
-  - Asegurar que no haya restos de soldadura, estaño o puentes en los pines de reset y modo bootloader.
+- **Acción:** Seguir el procedimiento de flasheo con **Atmel FLIP** descripto a continuación.
+
+---
+
+## ⚡ Procedimiento: Reflasheo de Firmware con Atmel FLIP
+
+> **Prerequisito:** Tener instalado [Atmel FLIP](https://www.microchip.com/developmenttools/ProductDetails/flip) (versión 3.4.7 o superior) y el driver DFU de Atmel (incluido en la instalación de FLIP). El equipo debe estar conectado por USB y visible en el Administrador de dispositivos como `ATxmega256A3U` bajo *Microchip Tools*.
+
+### Paso 1: Seleccionar el dispositivo objetivo
+
+Abrir **Atmel FLIP**. En la barra de herramientas, hacer clic en el icono de **Device Selection** (chip con lupa, primer ícono) o ir a **Device → Select**. En la lista desplegable, seleccionar **`ATxmega256A3U`** y presionar **Aceptar**.
+
+<p align="center">
+  <img src="../assets/diagrams/dfu_2.png" alt="Device Selection - ATxmega256A3U" width="500" />
+</p>
+
+---
+
+### Paso 2: Conectar por USB (DFU)
+
+Hacer clic en el ícono de **Communication Medium** (cable con conector, segundo ícono de la barra) o ir al menú **Settings → Communication → USB** (`Ctrl+U`).
+
+<p align="center">
+  <img src="../assets/diagrams/dfu_3.png" alt="Seleccionar comunicación USB en FLIP" width="500" />
+</p>
+
+FLIP intentará conectarse al dispositivo en modo DFU. Si el diálogo se cierra sin error, la conexión fue exitosa y el panel *FLASH Buffer Information* comenzará a mostrar datos del chip.
+
+> **⚠️ Si la conexión falla:** Verificar que el driver DFU de Atmel esté correctamente instalado para el dispositivo `ATxmega256A3U`. En el Administrador de dispositivos, el dispositivo debe aparecer bajo *Microchip Tools* (no como dispositivo desconocido).
+
+---
+
+### Paso 3: Cargar el archivo de firmware (.hex)
+
+Ir al menú **File → Load HEX File...** (`Ctrl+L`).
+
+<p align="center">
+  <img src="../assets/diagrams/dfu_4.png" alt="File > Load HEX File en FLIP" width="500" />
+</p>
+
+En el explorador de archivos, navegar hasta la carpeta del firmware y seleccionar el archivo `dstat-firmware.hex`. Presionar **OK**.
+
+<p align="center">
+  <img src="../assets/diagrams/dfu_5.png" alt="Seleccionar dstat-firmware.hex" width="600" />
+</p>
+
+Una vez cargado, el panel **FLASH Buffer Information** mostrará:
+- `Size`: tamaño total de la memoria flash del chip (256 KB para el ATxmega256A3U).
+- `Range`: rango de direcciones ocupadas por el firmware (ej. `0x0 – 0x93AD`).
+- `Checksum`: hash de integridad del archivo cargado.
+- `HEX File`: nombre del archivo y tamaño en bytes útiles.
+
+---
+
+### Paso 4: Ejecutar el flujo de programación
+
+Verificar que en el panel **Operations Flow** del lado izquierdo estén marcadas las opciones:
+- ✅ **Erase** — Borrar la memoria flash antes de escribir.
+- ✅ **Blank Check** — Verificar que la memoria esté en blanco antes de programar.
+- ✅ **Program** — Escribir el firmware en la memoria.
+- ✅ **Verify** — Confirmar que los datos escritos coincidan con el archivo fuente.
+
+Presionar el botón **Run** para iniciar la secuencia completa.
+
+<p align="center">
+  <img src="../assets/diagrams/dfu_6.png" alt="FLIP con firmware cargado y programación completada" width="550" />
+</p>
+
+La barra de estado inferior mostrará el progreso y, al finalizar exitosamente: **`Programming done in 0 seconds`** (o el tiempo real que tome). El firmware ha sido grabado correctamente.
+
+---
+
+### Paso 5: Reiniciar el instrumento
+
+Desconectar y volver a conectar el cable USB. El microcontrolador arrancará ahora con el firmware nuevo y el dispositivo aparecerá en el Administrador de dispositivos como `AVR MEGA Virtual Com Port (COMxx)`, listo para ser utilizado con la GUI de DStat.
+
+> **💡 Tip:** Si después del reflasheo Windows no reconoce el nuevo puerto COM, seguir el [Procedimiento de Solución de Controlador COM en Windows](#-procedimiento-solución-de-controlador-com-en-windows) documentado más arriba.
 
 ### 3. Mediciones con exceso de ruido de 50/60 Hz
 - **Causa:** Interferencia capacitiva o inductiva de la red eléctrica en los cables de los electrodos.
