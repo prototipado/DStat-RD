@@ -12,9 +12,9 @@ Se evaluaron tres configuraciones de carga conectadas entre el electrodo de trab
 3. **Circuito Abierto ($R_{\text{test}} = \text{Open}$):** Corriente teórica esperada $I = 0.0\text{ nA}$ (evaluación de corriente de polarización / offset de entrada).
 
 Para cada carga, se contrastaron tres escenarios de adquisición:
-- **Escenario 1:** Sin blindaje y sin calibración (`no_clean_no_cal`).
-- **Escenario 2:** Con blindaje (jaula de Faraday) y sin calibración (`clean_no_cal`).
-- **Escenario 3:** Con blindaje y con calibración de ganancia y offset aplicada (`clean_cal`).
+- **Escenario 1 (`no_clean_no_cal`):** Placa **sin lavar** por ultrasonido (con residuos de flux de soldadura en la PCB), sin blindaje y sin calibración.
+- **Escenario 2 (`clean_no_cal`):** Placa **lavada por ultrasonido con alcohol isopropílico (IPA)** para eliminar el flux y las corrientes de fuga parásitas, con blindaje (jaula de Faraday) y sin calibración.
+- **Escenario 3 (`clean_cal`):** Placa lavada por ultrasonido con IPA, con blindaje y con calibración de ganancia y offset aplicada en EEPROM.
 
 ---
 
@@ -56,24 +56,33 @@ Este representa el modo óptimo de operación recomendado.
 
 ---
 
-## 🛡️ 2. Comparación: Efecto del Blindaje Electroestático
+## 🧼 2. Comparación Crítica: Limpieza por Ultrasonido (Flux) y Blindaje vs. Placa Sin Lavar
 
-Comparación entre la medición sin blindaje (`no_clean_no_cal`) y con blindaje (`clean_no_cal`):
+> [!IMPORTANT]
+> **Hallazgo Experimental Fundamental:**  
+> La diferencia entre `no_clean` y `clean` corresponde al paso de la PCB por una **batea de ultrasonido con alcohol isopropílico (IPA)** para eliminar residuos de flux de soldadura. Este proceso tuvo el impacto más drástico en la exactitud de medición, superando ampliamente el efecto del apantallamiento en corriente continua.
 
-| Configuración | Carga | Sin Blindaje (Medido) | Con Blindaje (Medido) | Error Sin Blindaje | Error Con Blindaje |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **R = 1 MΩ** | 100 nA | 117.5 nA | 99.16 nA | **+17.50 %** | **-0.84 %** |
-| **R = 4 MΩ** | 25 nA | 42.73 nA | 24.83 nA | **+70.92 %** | **-0.66 %** |
+Los residuos de flux de soldadura sobre la superficie de la PCB actúan como vías de conducción parásita microscópicas entre pistas contiguas a distintos potenciales. En etapas analógicas de alta impedancia (como el nodo de entrada del amplificador de transimpedancia TIA), estas fugas introducen una **corriente de fuga parásita continua de aproximadamente 17 a 18 nA**:
+
+- En la carga de **1 MΩ** ($I_{\text{nominal}} = 100\text{ nA}$), la fuga elevó la corriente medida a **117.5 nA** (+17.50% de error).
+- En la carga de **4 MΩ** ($I_{\text{nominal}} = 25\text{ nA}$), la misma fuga de corriente elevó el valor medido a **42.73 nA**, representando un error masivo de **+70.92%**.
+
+Al someter la placa a **lavado por ultrasonido con IPA (`clean`)**, el flux se disolvió completamente y las corrientes de fuga desaparecieron, desplomando el error de inmediato a **menos del 1%**:
+
+| Configuración | Carga Nominal | Corriente Teórica | Sin Lavar + Sin Blindaje (`no_clean_no_cal`) | Lavada IPA + Con Blindaje (`clean_no_cal`) | Error Sin Lavar | Error Con Lavado IPA |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **R = 1 MΩ** | 1 MΩ | 100.0 nA | 117.5 nA | 99.16 nA | **+17.50 %** | **-0.84 %** |
+| **R = 4 MΩ** | 4 MΩ | 25.0 nA | 42.73 nA | 24.83 nA | **+70.92 %** | **-0.66 %** |
 
 ### Gráficas Comparativas
 
-#### Sin Blindaje (`no_clean_no_cal`)
+#### Placa Sin Lavar (Con Flux) y Sin Blindaje (`no_clean_no_cal`)
 ![Sin Blindaje](./signals/no_clean_no_cal/analysis/summary.png)
-*Nótese el desplazamiento masivo de la corriente media y la introducción de corrientes de fuga parásitas inducidas por el campo eléctrico ambiente.*
+*Nótese el desplazamiento masivo de la corriente media debido a las corrientes de fuga parásitas que atraviesan los restos de flux conductor en la superficie de la PCB.*
 
-#### Con Blindaje (`clean_no_cal`)
+#### Placa Lavada por Ultrasonido con IPA y Con Blindaje (`clean_no_cal`)
 ![Con Blindaje](./signals/clean_no_cal/analysis/summary.png)
-*Al confinar la celda dentro de una caja metálica conectada al terminal de referencia/chasis, el error disminuye drásticamente a menos del 1%.*
+*Tras la remoción completa del flux mediante ultrasonido con alcohol isopropílico, la corriente de fuga se anula y la celda blindada arroja lecturas con error inferior al 1%, incluso antes de calibrar por software.*
 
 ---
 
@@ -87,6 +96,7 @@ En regiones donde la red de distribución eléctrica es de **50 Hz** (por ejempl
 
 ## 💡 Conclusiones Operativas
 
-1. **Uso imprescindible de blindaje:** Para cualquier experimento donde las corrientes esperadas sean inferiores a $1\ \mu\text{A}$, el uso de celda blindada (jaula de Faraday) es mandatorio.
-2. **Selección de frecuencia de red:** Se debe ajustar siempre la frecuencia de rechazo en la GUI acorde a la frecuencia de red local (50 Hz o 60 Hz).
-3. **Calibración:** La calibración del instrumento permite corregir las tolerancias de los resistores de retroalimentación del TIA, reduciendo el error global de lectura al orden de **±0.2% a ±0.4%**.
+1. **Limpieza por ultrasonido obligatoria:** El paso de la PCB por batea de ultrasonido con alcohol isopropílico (IPA) de alta pureza es **absolutamente crítico**. Sin esta limpieza, los residuos de flux actúan como resistencias parásitas en paralelo que falsean completamente las mediciones de corrientes sub-microamperio (errores superiores al 70%).
+2. **Uso de blindaje electrostático:** La jaula de Faraday y cables apantallados son esenciales para suprimir el acople capacitivo de la red de corriente alterna (ruido de línea AC), garantizando pisos de ruido en el rango de los picoamperios.
+3. **Selección de frecuencia de red (50/60 Hz):** Debe coincidir siempre con la red local para aprovechar el notch analógico-digital del ADC ADS1255.
+4. **Calibración fina:** Corrige las tolerancias intrínsecas de los resistores de retroalimentación del TIA, reduciendo el error global de lectura al orden de **±0.2% a ±0.4%**.

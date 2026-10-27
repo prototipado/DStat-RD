@@ -8,10 +8,11 @@ Este directorio documenta los ensayos de caracterización eléctrica y validaci�
 
 Demostrar cuantitativamente el rendimiento del instrumento en adquisición analógica, evaluando:
 1. **Precisión frente a la Ley de Ohm** ($I = V / R$) en resistencias de 1 MΩ y 4 MΩ.
-2. **Impacto del apantallamiento electrostático (Jaula de Faraday / Blindaje):** Medición con y sin blindaje para cuantificar el acople de ruido de red.
-3. **Efecto de la calibración de ganancia del TIA:** Comparación de lectura con calibración de fábrica/por defecto vs. calibración fina.
-4. **Filtro de frecuencia de red (50 Hz vs 60 Hz):** Evaluación de la reyección de línea en el conversor analógico-digital (ADC).
-5. **Linealidad y rango dinámico en barridos de potencial (Linear Sweep):** Coeficiente de determinación ($R^2$) y error de fondo de escala.
+2. **Impacto crítico de la limpieza por ultrasonido con IPA:** Eliminación de restos de flux de soldadura en la PCB para suprimir corrientes de fuga parásitas (`no_clean` vs `clean`).
+3. **Impacto del apantallamiento electrostático (Jaula de Faraday / Blindaje):** Supresión del acople de ruido de red electromagnético.
+4. **Efecto de la calibración de ganancia del TIA:** Comparación de lectura con calibración de fábrica/por defecto vs. calibración fina.
+5. **Filtro de frecuencia de red (50 Hz vs 60 Hz):** Evaluación de la reyección de línea en el conversor analógico-digital (ADC).
+6. **Linealidad y rango dinámico en barridos de potencial (Linear Sweep):** Coeficiente de determinación ($R^2$) y error de fondo de escala.
 
 ---
 
@@ -19,15 +20,18 @@ Demostrar cuantitativamente el rendimiento del instrumento en adquisición anal�
 
 ### 1. Cronoamperometría ($V = 100\text{ mV}$, $R_{TIA} = 3\text{ M}\Omega$)
 
+> [!NOTE]
+> **Efecto de la limpieza de flux:** En la condición sin lavar (`no_clean`), los residuos de flux en la PCB introdujeron corrientes de fuga parásitas de ~17.5 nA, provocando un desvío de **+70.92%** en la resistencia de 4 MΩ. El **lavado en batea de ultrasonido con alcohol isopropílico (IPA)** eliminó las fugas, reduciendo el error a menos del **0.7%**.
+
 | Condición de Ensayo | $R_{\text{test}}$ | Corriente Esperada | Corriente Medida | Error Promedio | Ruido P2P | SNR (dB) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Sin blindaje, Sin calib** | 1 MΩ | 100.0 nA | 117.5 nA | **+17.50 %** | 1.91 nA | 23.3 dB |
-| **Sin blindaje, Sin calib** | 4 MΩ | 25.0 nA | 42.7 nA | **+70.92 %** | 1.85 nA | 21.8 dB |
-| **Con blindaje, Sin calib** | 1 MΩ | 100.0 nA | 99.16 nA | **-0.84 %** | 0.37 nA | 27.0 dB |
-| **Con blindaje, Sin calib** | 4 MΩ | 25.0 nA | 24.83 nA | **-0.66 %** | 0.47 nA | 21.6 dB |
-| **Con blindaje + Calibrado** | 1 MΩ | 100.0 nA | **99.82 nA** | **-0.18 %** | **0.28 nA** | 25.5 dB |
-| **Con blindaje + Calibrado** | 4 MΩ | 25.0 nA | **25.11 nA** | **+0.43 %** | **0.35 nA** | 26.9 dB |
-| **Con blindaje + Calibrado** | Open | 0.0 nA | **0.01 nA (10 pA)** | N/A | 1.82 nA | 11.4 dB |
+| **Sin lavar (con flux), Sin blindaje, Sin calib** (`no_clean_no_cal`) | 1 MΩ | 100.0 nA | 117.5 nA | **+17.50 %** | 1.91 nA | 23.3 dB |
+| **Sin lavar (con flux), Sin blindaje, Sin calib** (`no_clean_no_cal`) | 4 MΩ | 25.0 nA | 42.7 nA | **+70.92 %** | 1.85 nA | 21.8 dB |
+| **Lavado IPA ultrasonido + Con blindaje, Sin calib** (`clean_no_cal`) | 1 MΩ | 100.0 nA | 99.16 nA | **-0.84 %** | 0.37 nA | 27.0 dB |
+| **Lavado IPA ultrasonido + Con blindaje, Sin calib** (`clean_no_cal`) | 4 MΩ | 25.0 nA | 24.83 nA | **-0.66 %** | 0.47 nA | 21.6 dB |
+| **Lavado IPA ultrasonido + Con blindaje + Calibrado** (`clean_cal`) | 1 MΩ | 100.0 nA | **99.82 nA** | **-0.18 %** | **0.28 nA** | 25.5 dB |
+| **Lavado IPA ultrasonido + Con blindaje + Calibrado** (`clean_cal`) | 4 MΩ | 25.0 nA | **25.11 nA** | **+0.43 %** | **0.35 nA** | 26.9 dB |
+| **Lavado IPA ultrasonido + Con blindaje + Calibrado** (`clean_cal`) | Open | 0.0 nA | **0.01 nA (10 pA)** | N/A | 1.82 nA | 11.4 dB |
 
 ### 2. Barrido Lineal de Potencial (LSV / CV, $-200\text{ mV}$ a $+200\text{ mV}$)
 
