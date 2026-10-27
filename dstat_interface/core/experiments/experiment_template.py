@@ -189,18 +189,6 @@ class Experiment:
             while True:
                 time.sleep(0.2)
                 self.serial.reset_input_buffer()
-                # Drain stale device->PC frames left over from a previous run.
-                # Fixed budget (max 2 s) so we never hang even if bytes keep
-                # trickling in. Read whatever is available each pass.
-                try:
-                    end = time.monotonic() + 2.0
-                    while time.monotonic() < end:
-                        n = getattr(self.serial, "in_waiting", 0)
-                        if n:
-                            self.serial.read(n)
-                        time.sleep(0.1)
-                except Exception:
-                    pass
                 self.serial.write("!{}\n".format(n).encode())
                 time.sleep(0.1)
                 try:

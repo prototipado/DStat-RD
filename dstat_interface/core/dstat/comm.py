@@ -109,7 +109,7 @@ class SerialTrace:
             frames = self._data_frames + 1
             object.__setattr__(self, "_data_frames", frames)
             if frames % 200 == 0:
-                self.note(TRACE_INFO, "Ã¢â‚¬Â¦ {} data frames received".format(frames))
+                self.note(TRACE_INFO, "... {} data frames received".format(frames))
             return
         if kind == TRACE_RX and text.lstrip().startswith("#"):
             kind = TRACE_INFO
@@ -187,9 +187,7 @@ def _serial_process(ser_port, proc_pipe, ctrl_pipe, data_pipe, trace_queue=None)
         # terminal in the GUI.
         trace = SerialTrace(ser, trace_queue)
 
-        # Original startup handshake (unchanged from baseline).
         trace.write(b'!0 ')
-
         for _ in range(12):
             line = trace.readline().rstrip().decode(errors="replace")
             if line == "@ACK 0":
@@ -200,17 +198,6 @@ def _serial_process(ser_port, proc_pipe, ctrl_pipe, data_pipe, trace_queue=None)
             raise serial.SerialException(
                 f"No valid startup handshake received from {ser_port}."
             )
-
-        # Let the device settle before accepting further commands.
-        time.sleep(0.5)
-        try:
-            for _ in range(5):
-                n = getattr(ser, "in_waiting", 0)
-                if n:
-                    ser.read(n)
-                time.sleep(0.1)
-        except Exception:
-            pass
 
         trace.note(TRACE_INFO, "handshake complete on {}".format(ser_port))
         proc_pipe.send("READY")
@@ -781,11 +768,24 @@ class Settings:
     def run(self, ser, ctrl_pipe, data_pipe):
         self.ser = ser
 
+        # Clean any stale bytes in input buffer
+        try:
+            n = getattr(self.ser, "in_waiting", 0)
+            if n:
+                self.ser.read(n)
+            self.ser.reset_input_buffer()
+        except Exception:
+            pass
+
         if "w" in self.task:
-            self._write()
+            if not self._write():
+                return "SERIAL_ERROR"
 
         if "r" in self.task:
-            data_pipe.send(self._read())
+            data = self._read()
+            if not data:
+                return "SERIAL_ERROR"
+            data_pipe.send(data)
 
         return "DONE"
 
@@ -826,8 +826,36 @@ class Settings:
                 return False
             values.append(str(entry[1]))
 
+        # Format SW command. Firmware MAX_COMMAND_BYTES is 64 (max command length 63).
+        # Standard: 'SW' + ' '.join(values) + ' '
         cmd = "SW" + " ".join(values) + " "
-        return _write_command(self.ser, cmd)
+        if len(cmd) >= 64:
+            cmd = "SW" + " ".join(values)
+        if len(cmd) >= 64:
+            # Compact format: omit space before negative numbers (sscanf handles '-...' without space)
+            compact = ["SW"]
+            for i, v in enumerate(values):
+                s = str(v)
+                if i == 0 or s.startswith("-") or s.startswith("+"):
+                    compact.append(s)
+                else:
+                    compact.append(" " + s)
+            cmd = "".join(compact)
+
+        if len(cmd) >= 64:
+            logger.error("SW command exceeds firmware buffer (%d bytes >= 64): %s", len(cmd), cmd)
+            _trace_note(self.ser, TRACE_ERROR, f"Settings string too long for firmware ({len(cmd)} >= 64 bytes)")
+            return False
+
+        logger.debug("Writing settings command: %r (len=%d)", cmd, len(cmd))
+        if not _write_command(self.ser, cmd):
+            return False
+
+        # Consume firmware @DONE reply post-write
+        for _ in _iter_until_done(self.ser, timeout=5.0):
+            pass
+        self.ser.reset_input_buffer()
+        return True
 
 
 def read_settings(retries: int = 2):
@@ -864,6 +892,8 @@ def write_settings():
 
     status = state.ser.get_proc(block=True, timeout=15)
     logger.info("Wrote settings to DStat (status: %s)", status)
+    if status != "DONE":
+        raise ConnectionError(f"Writing settings to EEPROM failed ({status}).")
     return status
 
 

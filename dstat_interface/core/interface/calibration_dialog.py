@@ -217,9 +217,9 @@ class CalibrationDialog(QDialog):
         if state.ser is None or not getattr(state.ser, "is_connected", False):
             QMessageBox.warning(self, "Not connected", "Connect to the DStat first.")
             return
+        if hasattr(self.parent(), "_stop_ocp"):
+            self.parent()._stop_ocp()
         try:
-            state.ser.send_ctrl("a")
-            time.sleep(0.5)
             state.ser.flush_data()
             state.ser.flush_proc()
             comm.read_settings()
@@ -242,6 +242,8 @@ class CalibrationDialog(QDialog):
         if state.ser is None or not getattr(state.ser, "is_connected", False):
             QMessageBox.warning(self, "Not connected", "Connect to the DStat first.")
             return
+        if hasattr(self.parent(), "_stop_ocp"):
+            self.parent()._stop_ocp()
         values = self._collect()
         # Rebuild state.settings in the firmware's expected order.
         ordered = {}
@@ -260,8 +262,6 @@ class CalibrationDialog(QDialog):
             ordered[k][1] = values.get(k, ordered[k][1])
         state.settings = OrderedDict(ordered)
         try:
-            state.ser.send_ctrl("a")
-            time.sleep(0.5)
             state.ser.flush_data()
             state.ser.flush_proc()
         except Exception:
@@ -406,7 +406,7 @@ class CalibrationDialog(QDialog):
         # Ensure the device is idle and buffers are clear.
         try:
             state.ser.send_ctrl("a")
-            time.sleep(0.5)
+            time.sleep(0.3)
             state.ser.flush_data()
             state.ser.flush_proc()
         except Exception:
@@ -420,13 +420,6 @@ class CalibrationDialog(QDialog):
         self.btn_measure.setEnabled(True)
         self.btn_read.setEnabled(True)
         self.btn_write.setEnabled(True)
-
-        # Restart OCP (best effort)
-        try:
-            if hasattr(self.parent(), "_start_ocp"):
-                self.parent()._start_ocp()
-        except Exception:
-            pass
 
         if errors:
             QMessageBox.warning(self, "Auto-calibrate",

@@ -923,9 +923,13 @@ class MainWindow(QMainWindow):
             act.setChecked(m == mode)
 
     def _on_calibration(self):
+        self._stop_ocp()
         from .calibration_dialog import CalibrationDialog
         dlg = CalibrationDialog(self)
-        dlg.exec()
+        try:
+            dlg.exec()
+        finally:
+            self._start_ocp()
 
     # ------------------------------------------------------------------
     # Experiment execution
