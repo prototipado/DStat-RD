@@ -13,6 +13,7 @@
 ## 📋 Tabla de Contenidos
 
 - [Presentación](#presentación)
+- [Identidad Visual y Logotipo](#identidad-visual-y-logotipo)
 - [Características Principales](#características-principales)
 - [Galería](#galería)
 - [Estructura del Repositorio](#estructura-del-repositorio)
@@ -26,6 +27,25 @@
 ## 🔬 Presentación
 
 **DStat-RD** es una evolución y actualización de la plataforma de instrumentación electroquímica de bajo costo y hardware abierto **DStat**. Este repositorio centraliza la interfaz gráfica de usuario (GUI), el diseño mecánico de la carcasa y accesorios, la documentación de montaje y calibración, y las guías de uso del instrumento.
+
+---
+
+## 🎨 Identidad Visual y Logotipo
+
+<p align="center">
+  <img src="assets/covers/dstat_logo.png" alt="DStat-RD Logo" width="220" />
+</p>
+
+El logotipo de **DStat-RD** nace de la convergencia visual entre dos pilares esenciales del proyecto:
+
+1. **El *"Keyhole Logo"* de la Open Source Initiative (OSI):**  
+   Diseñado originalmente por **Colin Viebrock** en 1998, este símbolo representa una cerradura abierta y *"simboliza el desbloqueo del código fuente"* (*"symbolizes unlocking source code"*), sintetizando el espíritu de transparencia, libertad de estudio y colaboración abierta.
+2. **Las curvas de Voltamperometría Cíclica (CV) del paper original de DStat:**  
+   Inspiradas directamente en los perfiles voltamperométricos del artículo fundacional:
+   > *Dryden, M. D. M., & Wheeler, A. R. (2015). DStat: A Versatile, Open-Source Potentiostat for Electroanalysis and Integration. PLoS ONE 10(10): e0140349. [doi:10.1371/journal.pone.0140349](https://doi.org/10.1371/journal.pone.0140349)*  
+   En dicha publicación, los autores validan y contrastan experimentalmente las curvas de voltamperometría cíclica del DStat frente a potenciostatos comerciales de referencia.
+
+La silueta del isotipo fusiona la forma del ojo de la cerradura con los picos anódico y catódico característicos de un voltagrama redox, transmitiendo el concepto de **desbloquear el acceso a la electroquímica de precisión y a la instrumentación científica abierta**.
 
 ---
 

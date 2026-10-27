@@ -24,3 +24,11 @@ Las siguientes librerías de código abierto pueden ser utilizadas o enlazadas e
 - **PyQt / PySide:**
   - PyQt: GNU GPL v3 / Licencia Comercial (Riverbank Computing Limited).
   - PySide: GNU LGPL v3 (The Qt Company).
+
+---
+
+## 3. Atribución del Logotipo e Identidad Visual
+
+El isotipo de **DStat-RD** es una obra derivada que combina y rinde homenaje a dos creaciones:
+- **"Keyhole Logo" (Open Source Initiative):** Diseñado originalmente por **Colin Viebrock** (1998) para la *Open Source Initiative (OSI)*. Simboliza una cerradura abierta que *"desbloquea el código fuente"* (*unlocking source code*).
+- **Curvas de Voltamperometría Cíclica:** Gráficas de comparación experimental con potenciostatos comerciales pertenecientes a la publicación científica de **Michael D. M. Dryden** y **Aaron R. Wheeler** (*PLoS ONE 10(10): e0140349, 2015*).
