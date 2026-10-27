@@ -23,5 +23,5 @@ mechanical/
 - **Materiales sugeridos:** PETG, ABS o ASA para mayor resistencia térmica y química; PLA para prototipado rápido.
 - **Altura de capa recomendada:** 0.20 mm.
 - **Relleno (Infill):** 20% a 30% giroidal o cuadrícula.
-- **Tolerancias mecánicas:** Considerar una tolerancia de 0.2 mm a 0.3 mm para orificios de insertos roscados y conectores BNC/USB.
-- **Hardware de fijación:** Insertos roscados de latón termofijados M3, tornillos cilíndricos Allen M3.
+- **Tolerancias mecánicas:** Considerar una tolerancia de 0.2 mm a 0.3 mm para las ranuras laterales de deslizamiento de la PCB y las ventanas de conectores BNC y USB.
+- **Hardware de fijación:** Tornillos roscados directamente sobre los alojamientos de la pieza impresa en 3D (diseño optimizado sin necesidad de insertos metálicos). La PCB queda retenida por correderas sin tornillos.
