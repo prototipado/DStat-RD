@@ -20,6 +20,7 @@
 - [Instalación y Puesta en Marcha](#instalación-y-puesta-en-marcha)
 - [Documentación](#documentación)
 - [Atribución y Créditos](#atribución-y-créditos)
+- [Uso de Inteligencia Artificial (LLMs)](#-declaración-sobre-el-uso-de-inteligencia-artificial-llms)
 - [Licencia](#licencia)
 
 ---
@@ -137,10 +138,20 @@ Para consultar los manuales completos, visita la carpeta [`docs/`](./docs/):
 
 Este trabajo se basa y rinde homenaje al proyecto original **DStat**, desarrollado por el **Wheeler Microfluidics Lab** (Universidad de Toronto) y principalmente por **Michael D. M. Dryden**:
 
-- **Proyecto Original:** [DStat Hardware & Software](https://github.com/dstat-dev) / [Wheeler Lab](https://microfluidics.utoronto.ca/)
+- **Proyecto Original:** [DStat Hardware & Software](https://microfluidics.utoronto.ca/gitlab/dstat) / [Wheeler Lab](https://microfluidics.utoronto.ca/)
 - **Publicación científica:** Dryden, M. D. M., & Wheeler, A. R. (2015). *DStat: A Versatile, Open-Source Potentiostat for Electroanalysis and Integration*. PLoS ONE 10(10): e0140349.
 
 Para detalles exhaustivos de licencias y créditos a terceros, consultar [`THIRD_PARTY_NOTICES.md`](./THIRD_PARTY_NOTICES.md).
+
+---
+
+## 🤖 Declaración sobre el Uso de Inteligencia Artificial (LLMs)
+
+En consonancia con las prácticas de transparencia y reproducibilidad en la investigación y el desarrollo de código abierto:
+
+- **Asistencia en Código y Automatización:** Se han utilizado Modelos de Lenguaje Grande (LLMs) como herramientas de apoyo para la refactorización, modernización de la interfaz gráfica a Qt6/Python 3, scripts auxiliares de análisis y automatización de flujos de trabajo (CI/CD).
+- **Asistencia en Documentación:** La estructuración, redacción técnica, formateo y revisión de estilo de los manuales y guías del proyecto contaron con asistencia de LLMs.
+- **Revisión y Validación Humana:** Todos los desarrollos, diagramas, esquemas de conexión, instrucciones de montaje y resultados de caracterización experimental han sido revisados, contrastados en laboratorio y validados por los autores del proyecto. No obstante, al tratarse de herramientas de instrumentación científica y electrónica, se recomienda a los usuarios verificar las configuraciones y parámetros críticos para sus aplicaciones específicas. Si encuentras alguna inconsistencia, te invitamos a abrir un *Issue* en el repositorio.
 
 ---
 
