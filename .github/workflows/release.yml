@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag de versión para el Release (ej. v2.1.0)'
+        required: false
+        default: 'v2.1.0'
 
 permissions:
   contents: write
@@ -38,9 +43,12 @@ jobs:
       - name: Package executable into ZIP
         shell: pwsh
         run: |
-          $TAG = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}" } else { "build-${{ github.sha }}".Substring(0, 13) }
+          $inputTag = "${{ inputs.tag_name }}"
+          $refTag = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}" } else { "" }
+          $TAG = if ($refTag) { $refTag } elseif ($inputTag) { $inputTag } else { "v2.1.0" }
           $ZIP_NAME = "DStat-GUI-$TAG-Windows-x64.zip"
           Compress-Archive -Path "gui/dist/DStat-GUI-dev2" -DestinationPath $ZIP_NAME
+          "TAG=$TAG" | Out-File -FilePath $env:GITHUB_ENV -Append
           "ZIP_NAME=$ZIP_NAME" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Upload build artifact
@@ -50,9 +58,10 @@ jobs:
           path: ${{ env.ZIP_NAME }}
 
       - name: Publish to GitHub Release
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.TAG }}
+          name: DStat GUI ${{ env.TAG }} - Windows Standalone
           files: ${{ env.ZIP_NAME }}
           draft: false
           prerelease: false
