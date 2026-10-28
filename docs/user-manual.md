@@ -47,7 +47,7 @@ python -m dstat_interface.main
 
 <!-- CAPTURA: Ventana principal completa con todas las secciones visibles -->
 <p align="center">
-  <img src="../assets/gui/gui_ventana_principal.png" alt="Ventana Principal DStat GUI v2.1" width="800" />
+  <img src="../assets/gui/gui_ventana_principal.png" alt="Ventana Principal DStat GUI v2.1" width="1000" />
 </p>
 
 ---
@@ -82,7 +82,7 @@ Las columnas pueden redimensionarse arrastrando los separadores. La columna dere
 
 <!-- CAPTURA: Panel Communications con el combo de puerto, botones y campo OCP -->
 <p align="center">
-  <img src="../assets/gui/gui_panel_comms.png" alt="Panel Communications" width="700" />
+  <img src="../assets/gui/gui_panel_comms.png" alt="Panel Communications" width="1000" />
 </p>
 
 | Control | Función |
@@ -103,7 +103,7 @@ La **barra de estado** inferior muestra el estado de la conexión y mensajes de 
 
 <!-- CAPTURA: Grupo ADC Settings con los cuatro controles visibles -->
 <p align="center">
-  <img src="../assets/gui/gui_adc_settings.png" alt="Grupo ADC Settings" width="700" />
+  <img src="../assets/gui/gui_adc_settings.png" alt="Grupo ADC Settings" width="1000" />
 </p>
 
 | Control | Opciones / Rango | Descripción |
@@ -123,7 +123,7 @@ La **barra de estado** inferior muestra el estado de la conexión y mensajes de 
 
 <!-- CAPTURA: Panel Potentiostat Settings mostrando el combo Gain -->
 <p align="center">
-  <img src="../assets/gui/gui_gain_pot.png" alt="Potentiostat Settings - Ganancia TIA" width="700" />
+  <img src="../assets/gui/gui_gain_pot.png" alt="Potentiostat Settings - Ganancia TIA" width="1000" />
 </p>
 
 | Control | Descripción |
@@ -152,7 +152,7 @@ La relación entre ganancia y escala de corriente medible es aproximadamente:
 
 <!-- CAPTURA: Panel Experiment con la técnica CV seleccionada -->
 <p align="center">
-  <img src="../assets/gui/gui_exp_cv.png" alt="Panel Experiment con técnica CV" width="700" />
+  <img src="../assets/gui/gui_exp_cv.png" alt="Panel Experiment con técnica CV" width="1000" />
 </p>
 
 ### Selección de Técnica
@@ -180,7 +180,7 @@ Al cambiar la técnica, el panel de parámetros debajo del combo se actualiza au
 
 <!-- CAPTURA: Subgrupo Preconditioning con campos Cleaning y Deposition -->
 <p align="center">
-  <img src="../assets/gui/gui_exp_precond.png" alt="Grupo Preconditioning" width="700" />
+  <img src="../assets/gui/gui_exp_precond.png" alt="Grupo Preconditioning" width="1000" />
 </p>
 
 El preacondicionamiento se ejecuta **automáticamente antes** del experimento principal. Tiene dos etapas independientes configurables:
@@ -200,7 +200,7 @@ Dejar ambos campos de tiempo en `0` deshabilita esa etapa completamente.
 
 <!-- CAPTURA: Panel Experiment Control con botones Execute, Stop y barra de progreso -->
 <p align="center">
-  <img src="../assets/gui/gui_exp_control.png" alt="Panel Experiment Control" width="700" />
+  <img src="../assets/gui/gui_exp_control.png" alt="Panel Experiment Control" width="1000" />
 </p>
 
 | Control | Estado inicial | Función |
@@ -221,7 +221,7 @@ Muestra el gráfico en tiempo real durante la adquisición. El eje X y el eje Y 
 - **CA / Potentiometry:** Tiempo (s) vs. Corriente (A) o Tensión (V).
 
 <p align="center">
-  <img src="../assets/gui/gui_tab_plot.png" alt="Pestaña Plot con curva de voltamperometría cíclica" width="750" />
+  <img src="../assets/gui/gui_tab_plot.png" alt="Pestaña Plot con curva de voltamperometría cíclica" width="1000" />
 </p>
 
 La barra de herramientas embebida de Matplotlib permite:
@@ -234,14 +234,14 @@ La barra de herramientas embebida de Matplotlib permite:
 Tabla numérica con los datos crudos en columnas de tiempo/potencial y corriente, tal como son recibidos del instrumento.
 
 <p align="center">
-  <img src="../assets/gui/gui_raw_data.png" alt="Pestaña Raw Data con datos numéricos" width="750" />
+  <img src="../assets/gui/gui_raw_data.png" alt="Pestaña Raw Data con datos numéricos" width="1000" />
 </p>
 
 ### Tab Info
 Muestra información del experimento completado: técnica utilizada, parámetros empleados, duración, número de puntos adquiridos y estadísticas básicas si el análisis post-adquisición está habilitado.
 
 <p align="center">
-  <img src="../assets/gui/gui_tab_info.png" alt="Pestaña Info con metadatos del experimento" width="750" />
+  <img src="../assets/gui/gui_tab_info.png" alt="Pestaña Info con metadatos del experimento" width="1000" />
 </p>
 
 ---
@@ -267,7 +267,7 @@ Muestra información del experimento completado: técnica utilizada, parámetros
 
 <!-- CAPTURA: Barra Autosave con el checkbox, campo de carpeta y de nombre de archivo -->
 <p align="center">
-  <img src="../assets/gui/gui_autosave.png" alt="Barra Autosave" width="700" />
+  <img src="../assets/gui/gui_autosave.png" alt="Barra Autosave" width="1000" />
 </p>
 
 | Control | Descripción |
@@ -284,7 +284,7 @@ Muestra información del experimento completado: técnica utilizada, parámetros
 
 <!-- CAPTURA: Ventana de calibración con los grupos DAC, Current gain trims y sección de botones Read/Write -->
 <p align="center">
-  <img src="../assets/gui/gui_cal.png" alt="Diálogo Calibration / Device Settings" width="600" />
+  <img src="../assets/gui/gui_cal.png" alt="Diálogo Calibration / Device Settings" width="1000" />
 </p>
 
 El diálogo **Calibration / Device Settings** permite ajustar los parámetros de calibración almacenados en la EEPROM del instrumento.
@@ -322,7 +322,7 @@ El diálogo **Calibration / Device Settings** permite ajustar los parámetros de
 
 <!-- CAPTURA: Diálogo Analysis Options con el grupo Statistics -->
 <p align="center">
-  <img src="../assets/gui/gui_anali_options.png" alt="Diálogo Analysis Options" width="500" />
+  <img src="../assets/gui/gui_anali_options.png" alt="Diálogo Analysis Options" width="1000" />
 </p>
 
 Tras finalizar un experimento, se puede ejecutar análisis estadístico básico sobre los datos adquiridos:
@@ -471,7 +471,7 @@ Los parámetros de cada experimento son validados automáticamente por la GUI an
 
 <!-- CAPTURA: Barra superior de menús desplegada (File / View / Help) -->
 <p align="center">
-  <img src="../assets/gui/gui_menu.png" alt="Barra de menús desplegada" width="600" />
+  <img src="../assets/gui/gui_menu.png" alt="Barra de menús desplegada" width="1000" />
 </p>
 
 ### Menú File (Archivo)
