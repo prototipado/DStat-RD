@@ -17,8 +17,7 @@
 ## 📐 Contribución a Modelos CAD y Mecánica
 
 1. **Formatos obligatorios:**
-   - Todo cambio o nueva pieza debe incluir su archivo fuente original en `mechanical/cad/` (e.g., `.FCStd`, `.f3d`, `.sldprt`).
-   - Debe adjuntarse una exportación en formato neutral **STEP** (`.step` o `.stp`) en `mechanical/step/`.
+   - Debe adjuntarse el modelo en formato neutral **STEP** (`.step` o `.stp`) en `mechanical/step/` para garantizar la interoperabilidad entre diferentes softwares CAD.
    - Si la pieza es imprimible en 3D, incluir la malla exportada en **STL** (`.stl`) orientada en la posición óptima de impresión en `mechanical/stl/`.
 2. **Nomenclatura de archivos:**
    - Usar nombres descriptivos en minúsculas separados por guiones: `ejemplo-carcasa-inferior_v1.step`.

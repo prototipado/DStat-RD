@@ -59,7 +59,7 @@ La silueta del isotipo fusiona la forma del ojo de la cerradura con los picos an
   - Cronoamperometría (CA)
   - Espectroscopía de Impedancia Electroquímica (EIS) *(según soporte de hardware)*
 - **Interfaz Gráfica Moderna:** Control de parámetros, adquisición en tiempo real y exportación de datos.
-- **Gabinete y Montaje Mecánico:** Diseño modular impreso en 3D con archivos CAD/STEP disponibles para réplica y modificación.
+- **Gabinete y Montaje Mecánico:** Diseño modular impreso en 3D con modelos STEP y mallas STL disponibles para réplica y modificación.
 - **Conectividad:** Comunicación serie/USB con protocolo abierto.
 
 ---
@@ -76,7 +76,7 @@ La silueta del isotipo fusiona la forma del ojo de la cerradura con los picos an
 
 ```text
 ├── gui/                      # Código fuente de la interfaz gráfica y dependencias
-├── mechanical/               # Modelos CAD, STEP, STL para impresión 3D y renders
+├── mechanical/               # Modelos STEP, mallas STL para impresión 3D y renders
 ├── docs/                     # Manuales, montaje, conexión, calibración y caracterización
 ├── tools/                    # Utilidades y scripts de análisis de señales y validación
 ├── assets/                   # Fotografías, capturas de pantalla y diagramas
