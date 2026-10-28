@@ -12,7 +12,6 @@ mechanical/
 ├── step/        # Modelos en formato STEP (.step / .stp) neutral para interoperabilidad
 ├── stl/         # Mallas exportadas para impresión 3D (.stl / .3mf)
 ├── renders/     # Renders fotorrealistas de la carcasa y ensambles
-├── drawings/    # Planos técnicos acotados (dimensiones, tolerancias, PDF/DXF)
 └── README.md    # Esta documentación
 ```
 

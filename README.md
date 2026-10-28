@@ -75,7 +75,7 @@ La silueta del isotipo fusiona la forma del ojo de la cerradura con los picos an
 
 ```text
 ├── gui/                      # Código fuente de la interfaz gráfica y dependencias
-├── mechanical/               # Modelos CAD, STEP, STL para impresión 3D y planos
+├── mechanical/               # Modelos CAD, STEP, STL para impresión 3D y renders
 ├── docs/                     # Manuales, montaje, conexión, calibración y caracterización
 ├── tools/                    # Utilidades y scripts de análisis de señales y validación
 ├── assets/                   # Fotografías, capturas de pantalla y diagramas

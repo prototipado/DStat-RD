@@ -23,8 +23,6 @@
 2. **Nomenclatura de archivos:**
    - Usar nombres descriptivos en minúsculas separados por guiones: `ejemplo-carcasa-inferior_v1.step`.
    - Incluir versión o sufijo si reemplaza una pieza anterior.
-3. **Planos y tolerancias:**
-   - Si se agregan planos acotados, subirlos en PDF en `mechanical/drawings/`.
 
 ---
 
