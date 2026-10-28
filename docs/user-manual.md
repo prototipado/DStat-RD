@@ -103,7 +103,7 @@ La **barra de estado** inferior muestra el estado de la conexión y mensajes de 
 
 <!-- CAPTURA: Grupo ADC Settings con los cuatro controles visibles -->
 <p align="center">
-  <img src="../assets/gui/gui_adc_settings.png" alt="Grupo ADC Settings" width="380" />
+  <img src="../assets/gui/gui_adc_settings.png" alt="Grupo ADC Settings" width="700" />
 </p>
 
 | Control | Opciones / Rango | Descripción |
@@ -123,7 +123,7 @@ La **barra de estado** inferior muestra el estado de la conexión y mensajes de 
 
 <!-- CAPTURA: Panel Potentiostat Settings mostrando el combo Gain -->
 <p align="center">
-  <img src="../assets/gui/gui_gain_pot.png" alt="Potentiostat Settings - Ganancia TIA" width="380" />
+  <img src="../assets/gui/gui_gain_pot.png" alt="Potentiostat Settings - Ganancia TIA" width="700" />
 </p>
 
 | Control | Descripción |
@@ -152,7 +152,7 @@ La relación entre ganancia y escala de corriente medible es aproximadamente:
 
 <!-- CAPTURA: Panel Experiment con la técnica CV seleccionada -->
 <p align="center">
-  <img src="../assets/gui/gui_exp_cv.png" alt="Panel Experiment con técnica CV" width="380" />
+  <img src="../assets/gui/gui_exp_cv.png" alt="Panel Experiment con técnica CV" width="700" />
 </p>
 
 ### Selección de Técnica
@@ -180,7 +180,7 @@ Al cambiar la técnica, el panel de parámetros debajo del combo se actualiza au
 
 <!-- CAPTURA: Subgrupo Preconditioning con campos Cleaning y Deposition -->
 <p align="center">
-  <img src="../assets/gui/gui_exp_precond.png" alt="Grupo Preconditioning" width="380" />
+  <img src="../assets/gui/gui_exp_precond.png" alt="Grupo Preconditioning" width="700" />
 </p>
 
 El preacondicionamiento se ejecuta **automáticamente antes** del experimento principal. Tiene dos etapas independientes configurables:
@@ -200,7 +200,7 @@ Dejar ambos campos de tiempo en `0` deshabilita esa etapa completamente.
 
 <!-- CAPTURA: Panel Experiment Control con botones Execute, Stop y barra de progreso -->
 <p align="center">
-  <img src="../assets/gui/gui_exp_control.png" alt="Panel Experiment Control" width="380" />
+  <img src="../assets/gui/gui_exp_control.png" alt="Panel Experiment Control" width="700" />
 </p>
 
 | Control | Estado inicial | Función |
