@@ -96,7 +96,10 @@ En el Administrador de dispositivos, el puerto figurará activo y sin signos de 
 
 ## ⚡ Procedimiento: Reflasheo de Firmware con Atmel FLIP
 
-> **Prerequisito:** Tener instalado [Atmel FLIP](https://www.microchip.com/developmenttools/ProductDetails/flip) (versión 3.4.7 o superior) y el driver DFU de Atmel (incluido en la instalación de FLIP). El equipo debe estar conectado por USB y visible en el Administrador de dispositivos como `ATxmega256A3U` bajo *Microchip Tools*.
+> **Prerrequisitos:**
+> - Tener instalado [Atmel FLIP](https://www.microchip.com/developmenttools/ProductDetails/flip) (versión 3.4.7 o superior) y el driver DFU de Atmel (incluido en la instalación de FLIP).
+> - Contar con el archivo binario compilado `dstat-firmware.hex`. Si no dispones de él, puedes descargarlo directamente desde los artefactos de compilación en el GitLab oficial: [DStat Firmware CI/CD Builds](https://microfluidics.utoronto.ca/gitlab/dstat/dstat-firmware/-/jobs?kind=BUILD).
+> - El equipo debe estar conectado por USB y visible en el Administrador de dispositivos como `ATxmega256A3U` bajo *Microchip Tools*.
 
 ### Paso 1: Seleccionar el dispositivo objetivo
 
@@ -123,6 +126,9 @@ FLIP intentará conectarse al dispositivo en modo DFU. Si el diálogo se cierra 
 ---
 
 ### Paso 3: Cargar el archivo de firmware (.hex)
+
+> [!TIP]
+> Puedes descargar el archivo `dstat-firmware.hex` precompilado desde los artefactos de CI/CD del GitLab oficial: [DStat Firmware CI/CD Builds](https://microfluidics.utoronto.ca/gitlab/dstat/dstat-firmware/-/jobs?kind=BUILD).
 
 Ir al menú **File → Load HEX File...** (`Ctrl+L`).
 
